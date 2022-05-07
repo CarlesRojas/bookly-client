@@ -39,9 +39,6 @@ const APIProvider = (props) => {
 
             // Save new user
             if ("error" in response) return response;
-            user.current = response;
-            set("userUpdated", get("userUpdated") + 1);
-
             return response;
         } catch (error) {
             return { error: `Unknown registration error` };
@@ -70,7 +67,10 @@ const APIProvider = (props) => {
             // Save token
             if ("token" in response) {
                 token.current = response.token;
-                setInfo(`${APP_NAME}_token`);
+                setInfo(`${APP_NAME}_token`, token.current);
+
+                // Save user info
+                await getUserInfo();
             }
 
             return response;
@@ -140,7 +140,7 @@ const APIProvider = (props) => {
 
         // Set token
         token.current = tokenInCookie;
-        setInfo(`${APP_NAME}_token`);
+        setInfo(`${APP_NAME}_token`, token.current);
 
         // Save user info
         await getUserInfo();
@@ -347,8 +347,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
-            clearInfo(APP_NAME);
-            return { error: `Get user info error: ${error}` };
+            return { error: "Unknown error" };
         }
     };
 

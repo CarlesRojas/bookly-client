@@ -81,7 +81,7 @@ export default function Navbar({ setPage, currentPage }) {
 
     return (
         <div className={cn("Navbar", { showBack: selected >= 4 })}>
-            <div className="main neomorphism">
+            <div className="main neoButton">
                 {PAGES.map(({ name, icon }, i) => (
                     <SVG
                         className={cn("icon", { selected: selected === i })}
@@ -91,7 +91,7 @@ export default function Navbar({ setPage, currentPage }) {
                     />
                 ))}
             </div>
-            <div className="back neomorphism" onClick={() => setSelected(prevPage.current)}>
+            <div className="back neoButton" onClick={() => setSelected(prevPage.current)}>
                 <SVG className="icon" src={BackIcon} />
                 <p>back</p>
             </div>

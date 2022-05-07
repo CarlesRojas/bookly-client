@@ -10,6 +10,7 @@ const DataProvider = (props) => {
 
     const token = useRef(null);
     const user = useRef(null);
+    const userBooks = useRef([]);
     const books = useRef({});
     const authors = useRef({});
 
@@ -19,6 +20,7 @@ const DataProvider = (props) => {
                 APP_NAME,
                 token,
                 user,
+                userBooks,
                 books,
                 authors,
             }}

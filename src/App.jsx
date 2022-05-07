@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useCallback } from "react";
+import { useContext, useEffect, useState, useCallback, useRef } from "react";
 import Auth from "./components/auth/Auth";
 import DesktopLayout from "./components/layout/DesktopLayout";
 import MobileLayout from "./components/layout/MobileLayout";
@@ -7,12 +7,14 @@ import { API } from "./contexts/API";
 import { MediaQuery } from "./contexts/MediaQuery";
 import { Events } from "./contexts/Events";
 import { GlobalState } from "./contexts/GlobalState";
+import { Data } from "./contexts/Data";
 
 export default function App() {
-    const { isLoggedIn } = useContext(API);
+    const { isLoggedIn, getAllUserBooks } = useContext(API);
     const { isMobile, isTablet, isMobileSize, isLandscape } = useContext(MediaQuery);
     const { sub, unsub } = useContext(Events);
     const { set } = useContext(GlobalState);
+    const { userBooks } = useContext(Data);
 
     // #################################################
     //   LOGIN
@@ -21,21 +23,35 @@ export default function App() {
     const [loggedIn, setLoggedIn] = useState(null);
     const [dataLoaded, setDataLoaded] = useState(false);
 
+    const firstCheckDone = useRef(false);
     useEffect(() => {
+        if (firstCheckDone.current) return;
+        firstCheckDone.current = true;
+
         const checkLogin = async () => {
-            if (await isLoggedIn()) {
-                setLoggedIn(true);
-
-                // TODO Load all books the user has
-
-                setDataLoaded(true);
-            } else setLoggedIn(false);
-
-            set("loadingVisible", false);
+            setLoggedIn(await isLoggedIn());
         };
 
         checkLogin();
-    }, [isLoggedIn, loggedIn, set]);
+    }, [dataLoaded, isLoggedIn, loggedIn, set]);
+
+    useEffect(() => {
+        const loadData = async () => {
+            if (loggedIn && !dataLoaded) {
+                // TODO Load all books the user has
+
+                // Get user books
+                const userBooksResult = await getAllUserBooks();
+                if (!("error" in userBooksResult)) {
+                    userBooks.current = userBooksResult.books;
+
+                    setDataLoaded(true);
+                }
+            }
+        };
+
+        loadData();
+    }, [loggedIn, dataLoaded, getAllUserBooks, userBooks, set]);
 
     // #################################################
     //   EVENTS

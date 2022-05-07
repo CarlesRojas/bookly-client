@@ -24,7 +24,121 @@
     justify-content: center;
     height: 100%;
     width: 100%;
-    background-color: rgba(255, 0, 0, 0.2);
+
+    .formContainer {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: calc(100% - #{$navBarheight});
+        width: 100%;
+
+        .form {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 18rem;
+
+            .input {
+                height: 3rem;
+                max-height: 3rem;
+                min-height: 3rem;
+                width: 100%;
+                color: $text;
+                margin-bottom: 1rem;
+                padding: 0 1.6rem;
+                font-size: 1rem;
+
+                &::placeholder {
+                    color: $text;
+                    opacity: 0.4;
+                    font-size: 1rem;
+                }
+            }
+
+            .submit {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 3rem;
+                max-height: 3rem;
+                min-height: 3rem;
+                width: 100%;
+                background: none;
+                background-color: $purple;
+                color: $text;
+                color: white;
+                border: none;
+                border-radius: 100vw;
+                outline: none;
+                padding: 0 1.6rem;
+                font: inherit;
+                font-weight: 600;
+
+                .loadingIcon {
+                    height: 1rem;
+                    max-height: 1rem;
+                    min-height: 1rem;
+                    width: 1rem;
+                    max-width: 1rem;
+                    min-width: 1rem;
+                    color: white;
+                }
+            }
+
+            .change {
+                width: fit-content;
+                opacity: 0.7;
+                padding: 1rem 2rem;
+                font-weight: 600;
+                text-align: center;
+            }
+        }
+
+        .icon {
+            height: $navBarheight * 0.6;
+            max-height: $navBarheight * 0.6;
+            min-height: $navBarheight * 0.6;
+            width: $navBarheight * 0.6;
+            max-width: $navBarheight * 0.6;
+            min-width: $navBarheight * 0.6;
+            color: black;
+            margin-bottom: 0.5rem;
+        }
+
+        .title {
+            background: linear-gradient(to right, #c585d8 0%, #9c67fb 100%);
+            background-clip: text;
+            color: $purple;
+            font-size: 1.2rem;
+            font-weight: 700;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+        }
+    }
+
+    .error {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.2s ease-in-out;
+        height: $navBarheight;
+        width: 100%;
+        color: rgb(235, 84, 71);
+        opacity: 0;
+        font-weight: 500;
+
+        &.visible {
+            opacity: 1;
+        }
+    }
 }
 
 // #######################################
@@ -87,14 +201,14 @@
 }
 
 .Navbar {
-    transition: transform 0.3s ease-in-out;
+    $margin: 0.6rem;
     position: absolute;
     display: flex;
+    transition: transform 0.3s ease-in-out;
     height: $navBarheight;
     width: 200%;
     bottom: 0;
     left: 0;
-    $margin: 0.6rem;
 
     &.showBack {
         transform: translateX(-50%);
@@ -107,8 +221,8 @@
         width: $navBarheight - ($margin * 2);
         max-width: $navBarheight - ($margin * 2);
         min-width: $navBarheight - ($margin * 2);
-        padding: $navBarheight * 0.23;
         color: $text;
+        padding: $navBarheight * 0.23;
     }
 
     .main {
@@ -118,8 +232,8 @@
         justify-content: space-evenly;
         height: calc(100% - #{$margin * 2});
         width: calc(50% - #{$margin * 2});
-        left: 0;
         top: 0;
+        left: 0;
         margin: $margin;
 
         .icon {
@@ -139,20 +253,20 @@
         justify-content: center;
         height: calc(100% - #{$margin * 2});
         width: calc(50% - #{$margin * 2});
-        left: 50%;
         top: 0;
+        left: 50%;
         margin: $margin;
 
         .icon,
         p {
-            opacity: 0.8;
             pointer-events: none;
+            opacity: 0.8;
         }
 
         p {
+            padding-right: $navBarheight * 0.23;
             font-size: 0.9rem;
             font-weight: 700;
-            padding-right: $navBarheight * 0.23;
         }
     }
 }
@@ -226,8 +340,18 @@
     background-color: rgba(255, 128, 0, 0.2);
 }
 
-.neomorphism {
-    border-radius: 15px;
+// #######################################
+//      OTHERS
+// #######################################
+
+.neoButton {
+    box-shadow: 0.2rem 0.2rem 0.4rem #c9c9c9, -0.2rem -0.2rem 0.4rem #ffffff;
     background-color: $background;
-    box-shadow: 0.15rem 0.15rem 0.3rem #c9c9c9, -0.15rem -0.15rem 0.3rem #ffffff;
+    border-radius: 15px;
+}
+
+.neoInput {
+    box-shadow: 0.2rem 0.2rem 0.4rem #c9c9c9 inset, -0.2rem -0.2rem 0.4rem #ffffff inset;
+    background-color: $background;
+    border-radius: 100vw;
 }
