@@ -11,3 +11,223 @@
     height: 100%;
     width: 100%;
 }
+
+// #######################################
+//      AUTH
+// #######################################
+
+.Auth {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+// #######################################
+//      LAYOUT
+// #######################################
+
+.DesktopLayout {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.Loading {
+    pointer-events: none;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease-in-out;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: $background;
+    opacity: 0;
+
+    &.visible {
+        pointer-events: all;
+        opacity: 1;
+    }
+
+    .icon {
+        height: 2.5rem;
+        max-height: 2.5rem;
+        min-height: 2.5rem;
+        width: 2.5rem;
+        max-width: 2.5rem;
+        min-width: 2.5rem;
+        color: black;
+        opacity: 0.3;
+    }
+}
+
+.MobileLayout {
+    position: relative;
+    height: 100%;
+    width: 100%;
+
+    .mainPagesContent {
+        position: absolute;
+        height: calc(100% - #{$navBarheight});
+        width: 100%;
+        top: 0;
+        left: 0;
+    }
+}
+
+.Navbar {
+    transition: transform 0.3s ease-in-out;
+    position: absolute;
+    display: flex;
+    height: $navBarheight;
+    width: 200%;
+    bottom: 0;
+    left: 0;
+    $margin: 0.6rem;
+
+    &.showBack {
+        transform: translateX(-50%);
+    }
+
+    .icon {
+        height: $navBarheight - ($margin * 2);
+        max-height: $navBarheight - ($margin * 2);
+        min-height: $navBarheight - ($margin * 2);
+        width: $navBarheight - ($margin * 2);
+        max-width: $navBarheight - ($margin * 2);
+        min-width: $navBarheight - ($margin * 2);
+        padding: $navBarheight * 0.23;
+        color: $text;
+    }
+
+    .main {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        height: calc(100% - #{$margin * 2});
+        width: calc(50% - #{$margin * 2});
+        left: 0;
+        top: 0;
+        margin: $margin;
+
+        .icon {
+            transition: opacity 0.2s ease-in-out;
+            opacity: 0.2;
+
+            &.selected {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    .back {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: calc(100% - #{$margin * 2});
+        width: calc(50% - #{$margin * 2});
+        left: 50%;
+        top: 0;
+        margin: $margin;
+
+        .icon,
+        p {
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        p {
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding-right: $navBarheight * 0.23;
+        }
+    }
+}
+
+// #######################################
+//      PAGES
+// #######################################
+
+.Home {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 225, 0, 0.2);
+}
+
+.Search {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(77, 255, 0, 0.2);
+}
+.Stats {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 242, 255, 0.2);
+}
+
+.Settings {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(132, 0, 255, 0.2);
+}
+
+.Book {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 0, 238, 0.2);
+}
+
+.Author {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 128, 0, 0.2);
+}
+
+.neomorphism {
+    border-radius: 15px;
+    background-color: $background;
+    box-shadow: 0.15rem 0.15rem 0.3rem #c9c9c9, -0.15rem -0.15rem 0.3rem #ffffff;
+}
