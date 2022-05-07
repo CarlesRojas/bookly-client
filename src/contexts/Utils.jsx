@@ -3,6 +3,38 @@ import { createContext } from "react";
 export const Utils = createContext();
 const UtilsProvider = (props) => {
     // ###################################################
+    //      LOCAL STORAGE
+    // ###################################################
+
+    const getInfo = (key) => {
+        try {
+            return JSON.parse(localStorage.getItem(key));
+        } catch {
+            return localStorage.getItem(key);
+        }
+    };
+
+    const setInfo = (key, value) => {
+        if (typeof value === "object") {
+            localStorage.setItem(key, JSON.stringify(value));
+        } else {
+            localStorage.setItem(key, value);
+        }
+    };
+
+    const deleteInfo = (key) => {
+        localStorage.removeItem(key);
+    };
+
+    const clearInfo = (appName) => {
+        const keys = Object.keys(localStorage);
+
+        for (let key of keys) {
+            if (key.includes(appName)) deleteInfo(key);
+        }
+    };
+
+    // ###################################################
     //      INTERPOLATIONS
     // ###################################################
 
@@ -211,6 +243,12 @@ const UtilsProvider = (props) => {
     return (
         <Utils.Provider
             value={{
+                // LOCAL STORAGE
+                getInfo,
+                setInfo,
+                deleteInfo,
+                clearInfo,
+
                 // INTERPOLATIONS
                 clamp,
                 lerp,
