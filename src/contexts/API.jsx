@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useRef } from "react";
 
 // Contexts
 import { Utils } from "./Utils";
@@ -9,11 +9,12 @@ import { GlobalState } from "./GlobalState";
 const API_VERSION = "api_v1";
 const API_URL = "https://bookly-server.herokuapp.com/"; // "http://localhost:3100/"
 const OPEN_LIB_API_URL = "https://openlibrary.org";
+const IMAGE_SIZE = "M"; // "M" "L"
 
 export const API = createContext();
 const APIProvider = (props) => {
     const { getInfo, setInfo, clearInfo } = useContext(Utils);
-    const { APP_NAME, token, user, books, authors } = useContext(Data);
+    const { APP_NAME, token, user, books, authors, changeUserBookStatus } = useContext(Data);
     const { emit } = useContext(Events);
     const { set, get } = useContext(GlobalState);
 
@@ -261,7 +262,7 @@ const APIProvider = (props) => {
     //   BOOK API
     // #################################################
 
-    const changeBookStatus = async (bookId, status) => {
+    const changeBookStatus = async (bookId, oldStatus, status) => {
         const today = new Date();
         const month = today.getMonth();
         const year = today.getFullYear();
@@ -280,6 +281,8 @@ const APIProvider = (props) => {
             });
 
             const response = await rawResponse.json();
+            if ("error" in response) return false;
+            else changeUserBookStatus(bookId, oldStatus, status, response);
 
             return response;
         } catch (error) {
@@ -357,14 +360,7 @@ const APIProvider = (props) => {
 
     const getBookInfo = async (bookId) => {
         try {
-            const rawResponse = await fetch(`${OPEN_LIB_API_URL}/works/${bookId}.json`, {
-                method: "get",
-                headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                },
-            });
+            const rawResponse = await fetch(`${OPEN_LIB_API_URL}/works/${bookId}.json`);
 
             const response = await rawResponse.json();
             const { description, links, title, authors, covers } = response;
@@ -378,7 +374,7 @@ const APIProvider = (props) => {
                 authors: authors.map(({ author }) => author.key.replace("/authors/", "")),
                 covers: covers
                     .filter((coverKey) => coverKey !== -1)
-                    .map((coverKey) => `https://covers.openlibrary.org/b/id/${coverKey}-M.jpg`),
+                    .map((coverKey) => `https://covers.openlibrary.org/b/id/${coverKey}-${IMAGE_SIZE}.jpg`),
             };
 
             // Update book
@@ -395,22 +391,19 @@ const APIProvider = (props) => {
         }
     };
 
+    const fetchedAuthors = useRef({});
     const getAuthorInfo = async (authorId) => {
         try {
-            const rawResponse = await fetch(`${OPEN_LIB_API_URL}/authors/${authorId}.json`, {
-                method: "get",
-                headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                },
-            });
+            if (authorId in fetchedAuthors.current) return fetchedAuthors.current[authorId];
+            fetchedAuthors.current[authorId] = null;
+
+            const rawResponse = await fetch(`${OPEN_LIB_API_URL}/authors/${authorId}.json`);
 
             const response = await rawResponse.json();
             const { links, name, birth_date, bio, photos } = response;
 
             // Get author works
-            const works = await getAuthorWorks(authorId);
+            // const works = await getAuthorWorks(authorId);
 
             // Parse response
             const parsedResponse = {
@@ -419,13 +412,14 @@ const APIProvider = (props) => {
                 name,
                 birth_date,
                 bio,
-                works,
+                works: null,
                 photos: photos
                     .filter((photoKey) => photoKey !== -1)
-                    .map((photoKey) => `https://covers.openlibrary.org/b/id/${photoKey}-M.jpg`),
+                    .map((photoKey) => `https://covers.openlibrary.org/b/id/${photoKey}-${IMAGE_SIZE}.jpg`),
             };
 
-            // Update book
+            // Update author
+            fetchedAuthors.current[authorId] = parsedResponse;
             authors.current[authorId] = parsedResponse;
 
             return parsedResponse;
@@ -436,14 +430,7 @@ const APIProvider = (props) => {
 
     const getAuthorWorks = async (authorId) => {
         try {
-            const rawResponse = await fetch(`${OPEN_LIB_API_URL}/search.json?author=${authorId}&language=eng`, {
-                method: "get",
-                headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                },
-            });
+            const rawResponse = await fetch(`${OPEN_LIB_API_URL}/search.json?author=${authorId}&language=eng`);
 
             const response = await rawResponse.json();
 
@@ -478,6 +465,7 @@ const APIProvider = (props) => {
                 // OPEN LIBRARY API
                 getBookInfo,
                 getAuthorInfo,
+                getAuthorWorks,
             }}
         >
             {props.children}

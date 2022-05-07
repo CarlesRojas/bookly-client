@@ -203,7 +203,6 @@
 }
 
 .Navbar {
-    $margin: 0.6rem;
     position: absolute;
     display: flex;
     transition: transform 0.3s ease-in-out;
@@ -281,11 +280,27 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     height: 100%;
     width: 100%;
-    background-color: rgba(255, 225, 0, 0.2);
+
+    .section {
+        font-size: 1.1rem;
+        margin: 2rem $margin 0;
+        opacity: 0.9;
+    }
+
+    .container {
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior: contain;
+        position: relative;
+        // width: 100%;
+        width: fit-content;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
 }
 
 .Search {
@@ -343,13 +358,37 @@
 }
 
 // #######################################
+//      COMPONENTS
+// #######################################
+
+.BookCover {
+    position: relative;
+    overflow: hidden;
+    margin-left: $margin;
+
+    &.last {
+        margin-right: $margin;
+    }
+
+    .cover {
+        object-fit: cover;
+    }
+}
+
+// #######################################
 //      OTHERS
 // #######################################
+
+.newDiv {
+    box-shadow: 0.2rem 0.2rem 0.4rem #c9c9c9, -0.2rem -0.2rem 0.4rem #ffffff;
+    background-color: $background;
+    border-radius: 0.5rem;
+}
 
 .neoButton {
     box-shadow: 0.2rem 0.2rem 0.4rem #c9c9c9, -0.2rem -0.2rem 0.4rem #ffffff;
     background-color: $background;
-    border-radius: 15px;
+    border-radius: 100vw;
 }
 
 .neoInput {

@@ -14,7 +14,7 @@ export default function App() {
     const { isMobile, isTablet, isMobileSize, isLandscape } = useContext(MediaQuery);
     const { sub, unsub } = useContext(Events);
     const { set } = useContext(GlobalState);
-    const { userBooks } = useContext(Data);
+    const { setUserBooks } = useContext(Data);
 
     // #################################################
     //   LOGIN
@@ -35,15 +35,16 @@ export default function App() {
         checkLogin();
     }, [dataLoaded, isLoggedIn, loggedIn, set]);
 
+    const loadedDone = useRef(false);
     useEffect(() => {
         const loadData = async () => {
-            if (loggedIn && !dataLoaded) {
-                // TODO Load all books the user has
+            if (loggedIn && !loadedDone.current) {
+                loadedDone.current = true;
 
                 // Get user books
                 const userBooksResult = await getAllUserBooks();
                 if (!("error" in userBooksResult)) {
-                    userBooks.current = userBooksResult.books;
+                    setUserBooks(userBooksResult.books);
 
                     setDataLoaded(true);
                 }
@@ -51,7 +52,7 @@ export default function App() {
         };
 
         loadData();
-    }, [loggedIn, dataLoaded, getAllUserBooks, userBooks, set]);
+    }, [loggedIn, dataLoaded, getAllUserBooks, setUserBooks, set]);
 
     // #################################################
     //   EVENTS
