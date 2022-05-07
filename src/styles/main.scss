@@ -34,74 +34,6 @@
         height: calc(100% - #{$navBarheight});
         width: 100%;
 
-        .form {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            max-width: 18rem;
-
-            .input {
-                height: 3rem;
-                max-height: 3rem;
-                min-height: 3rem;
-                width: 100%;
-                color: $text;
-                margin-bottom: 1rem;
-                padding: 0 1.6rem;
-                font-size: 1rem;
-                -webkit-appearance: none;
-
-                &::placeholder {
-                    color: $text;
-                    opacity: 0.4;
-                    font-size: 1rem;
-                }
-            }
-
-            .submit {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 3rem;
-                max-height: 3rem;
-                min-height: 3rem;
-                width: 100%;
-                background: none;
-                background-color: $purple;
-                color: $text;
-                color: white;
-                border: none;
-                border-radius: 100vw;
-                outline: none;
-                padding: 0 1.6rem;
-                font: inherit;
-                font-weight: 600;
-                -webkit-appearance: none;
-
-                .loadingIcon {
-                    height: 1rem;
-                    max-height: 1rem;
-                    min-height: 1rem;
-                    width: 1rem;
-                    max-width: 1rem;
-                    min-width: 1rem;
-                    color: white;
-                }
-            }
-
-            .change {
-                width: fit-content;
-                opacity: 0.7;
-                padding: 1rem 2rem;
-                font-weight: 600;
-                text-align: center;
-            }
-        }
-
         .icon {
             height: $navBarheight * 0.6;
             max-height: $navBarheight * 0.6;
@@ -276,6 +208,7 @@
 //      PAGES
 // #######################################
 
+.Search,
 .Home {
     position: relative;
     display: flex;
@@ -287,6 +220,7 @@
         font-size: 1.1rem;
         margin: 2rem $margin 0;
         opacity: 0.9;
+        font-weight: 500;
     }
 
     .container {
@@ -294,7 +228,6 @@
         overflow-y: hidden;
         overscroll-behavior: contain;
         position: relative;
-        // width: 100%;
         width: fit-content;
         max-width: 100%;
         display: flex;
@@ -304,15 +237,30 @@
 }
 
 .Search {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(77, 255, 0, 0.2);
+    .results {
+        transition: opacity 0.2s ease-in-out;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        opacity: 0;
+        pointer-events: none;
+
+        &.visible {
+            pointer-events: all;
+            opacity: 1;
+        }
+    }
+
+    .inputsContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        flex: 1;
+    }
 }
+
 .Stats {
     position: relative;
     display: flex;
@@ -378,6 +326,74 @@
 // #######################################
 //      OTHERS
 // #######################################
+
+.form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 18rem;
+
+    .input {
+        height: 3rem;
+        max-height: 3rem;
+        min-height: 3rem;
+        width: 100%;
+        color: $text;
+        margin-bottom: 1rem;
+        padding: 0 1.6rem;
+        font-size: 1rem;
+        -webkit-appearance: none;
+
+        &::placeholder {
+            color: $text;
+            opacity: 0.4;
+            font-size: 1rem;
+        }
+    }
+
+    .submit {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 3rem;
+        max-height: 3rem;
+        min-height: 3rem;
+        width: 100%;
+        background: none;
+        background-color: $purple;
+        color: $text;
+        color: white;
+        border: none;
+        border-radius: 100vw;
+        outline: none;
+        padding: 0 1.6rem;
+        font: inherit;
+        font-weight: 600;
+        -webkit-appearance: none;
+
+        .loadingIcon {
+            height: 1rem;
+            max-height: 1rem;
+            min-height: 1rem;
+            width: 1rem;
+            max-width: 1rem;
+            min-width: 1rem;
+            color: white;
+        }
+    }
+
+    .change {
+        width: fit-content;
+        opacity: 0.7;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        text-align: center;
+    }
+}
 
 .newDiv {
     box-shadow: 0.2rem 0.2rem 0.4rem #c9c9c9, -0.2rem -0.2rem 0.4rem #ffffff;

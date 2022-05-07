@@ -80,7 +80,7 @@ export default function Auth({ setLoggedIn }) {
                     required
                 />
                 <button className="submit neoButton" type="submit">
-                    {loading ? <SVG className="loadingIcon" src={LoadingIcon} /> : "log in"}
+                    {loading ? <SVG className="loadingIcon spin infinite" src={LoadingIcon} /> : "log in"}
                 </button>
                 <p className="change" onClick={() => handleChange("register")}>
                     register

@@ -1,28 +1,24 @@
-import { useContext, useRef, useEffect, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import BookCover from "../BookCover";
+import useResize from "../../hooks/useResize";
 
 import { Data } from "../../contexts/Data";
 
 export default function Home() {
     const { finishedBooks, wantToReadBooks, readingBooks } = useContext(Data);
 
-    const homeRef = useRef();
+    const containerRef = useRef();
     const [coverHeight, setCoverHeight] = useState(0);
 
-    const onResize = () => {
-        const box = homeRef.current.getBoundingClientRect();
+    const handleResize = () => {
+        const box = containerRef.current.getBoundingClientRect();
 
         setCoverHeight((box.height - (3.6 * 3 + 2) * 16) / 3);
     };
-
-    useEffect(() => {
-        onResize();
-
-        return () => {};
-    }, []);
+    useResize(handleResize, true);
 
     return (
-        <div className="Home" ref={homeRef}>
+        <div className="Home" ref={containerRef}>
             <p className="section">reading</p>
             <div className="container" style={{ height: `${coverHeight + 16}px` }}>
                 {readingBooks.map((bookData, i) => (

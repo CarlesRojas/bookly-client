@@ -16,9 +16,13 @@ export default function BookCover({ bookData, coverHeight, last }) {
         const getBookData = async () => {
             if (!Object.keys(books.current).includes(bookId)) {
                 const response = await getBookInfo(bookId);
-                if ("error" in response) return;
+                if ("error" in response) {
+                    console.log(response.error);
+                    return;
+                }
             }
 
+            console.log("SET BOOK DATA");
             setBookInfo(books.current[bookId]);
         };
 
@@ -33,6 +37,8 @@ export default function BookCover({ bookData, coverHeight, last }) {
         minWidth: `${coverHeight * 0.65}px`,
         maxWidth: `${coverHeight * 0.65}px`,
     };
+
+    console.log(bookInfo);
 
     return (
         <div className={cn("BookCover", "newDiv", { last })} style={style}>

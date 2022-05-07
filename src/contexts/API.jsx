@@ -373,8 +373,10 @@ const APIProvider = (props) => {
                 title,
                 authors: authors.map(({ author }) => author.key.replace("/authors/", "")),
                 covers: covers
-                    .filter((coverKey) => coverKey !== -1)
-                    .map((coverKey) => `https://covers.openlibrary.org/b/id/${coverKey}-${IMAGE_SIZE}.jpg`),
+                    ? covers
+                          .filter((coverKey) => coverKey !== -1)
+                          .map((coverKey) => `https://covers.openlibrary.org/b/id/${coverKey}-${IMAGE_SIZE}.jpg`)
+                    : null,
             };
 
             // Update book
@@ -444,6 +446,27 @@ const APIProvider = (props) => {
         }
     };
 
+    const searchBooks = async (bookQuery, authorQuery) => {
+        const parsedBookQuery = bookQuery.length ? `&title=${bookQuery.toLowerCase().replaceAll(" ", "+")}` : "";
+        const parsedAuthorQuery = authorQuery.length ? `&author=${authorQuery.toLowerCase().replaceAll(" ", "+")}` : "";
+
+        try {
+            const rawResponse = await fetch(
+                `${OPEN_LIB_API_URL}/search.json?language=eng${parsedBookQuery}${parsedAuthorQuery}`
+            );
+
+            const response = await rawResponse.json();
+
+            const parsedResponse = response.docs
+                .filter(({ type }) => type === "work")
+                .map(({ key }) => key.replace("/works/", ""));
+
+            return parsedResponse;
+        } catch (error) {
+            return { error: `Get author info error: ${error}` };
+        }
+    };
+
     return (
         <API.Provider
             value={{
@@ -466,6 +489,7 @@ const APIProvider = (props) => {
                 getBookInfo,
                 getAuthorInfo,
                 getAuthorWorks,
+                searchBooks,
             }}
         >
             {props.children}

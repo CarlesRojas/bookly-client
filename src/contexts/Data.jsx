@@ -64,6 +64,13 @@ const DataProvider = (props) => {
     const [wantToReadBooks, setWantToReadBooks] = useState([]);
     const [readingBooks, setReadingBooks] = useState([]);
 
+    // #################################################
+    //   SEARCH
+    // #################################################
+
+    const [searchedAuthors, setSearchedAuthors] = useState([{ authorId: 1 }, { authorId: 2 }]);
+    const [searchedBooks, setSearchedBooks] = useState([{ bookId: 45 }]);
+
     return (
         <Data.Provider
             value={{
@@ -83,6 +90,12 @@ const DataProvider = (props) => {
                 wantToReadBooks,
                 readingBooks,
                 changeUserBookStatus,
+
+                // SEARCH
+                searchedAuthors,
+                setSearchedAuthors,
+                searchedBooks,
+                setSearchedBooks,
             }}
         >
             {props.children}
