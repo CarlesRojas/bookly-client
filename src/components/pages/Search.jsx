@@ -15,6 +15,7 @@ export default function Search() {
     const { searchBooks } = useContext(API);
 
     const containerRef = useRef();
+    const [hideResults, setHideResults] = useState(true);
     const [coverHeight, setCoverHeight] = useState(0);
 
     const handleResize = () => {
@@ -46,7 +47,9 @@ export default function Search() {
 
     return (
         <div className="Search" ref={containerRef}>
-            <div className={cn("results", { visible: searchedAuthors.length || searchedBooks.length })}>
+            <div
+                className={cn("results", { visible: !hideResults && (searchedAuthors.length || searchedBooks.length) })}
+            >
                 <p className="section">authors</p>
                 <div className="container" style={{ height: `${coverHeight + 16}px` }}>
                     {searchedAuthors.map((authorId, i) => (
@@ -81,6 +84,8 @@ export default function Search() {
                         placeholder={"book title or author"}
                         autocomlete={"new-password"}
                         ref={inputRef}
+                        onFocus={() => setHideResults(true)}
+                        onBlur={() => setHideResults(false)}
                     />
                     <button className="submit neoButton" type="submit">
                         {loading ? <SVG className="loadingIcon spin infinite" src={LoadingIcon} /> : "search"}

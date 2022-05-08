@@ -115,14 +115,24 @@ const DataProvider = (props) => {
             for (let i = 0; i < result.length; i++) {
                 const oldId = result[i];
 
-                if (
-                    booksHaveSameAuthor(books.current[id].authors, books.current[oldId].authors) &&
-                    titlesAreSimilar(books.current[id].title, books.current[oldId].title)
-                ) {
+                const authors1 = books.current[id] && "authors" in books.current[id] ? books.current[id].authors : [""];
+                const authors2 =
+                    books.current[oldId] && "authors" in books.current[oldId] ? books.current[oldId].authors : [""];
+                const title1 = books.current[id] && "title" in books.current[id] ? books.current[id].title : "";
+                const title2 =
+                    books.current[oldId] && "title" in books.current[oldId] ? books.current[oldId].title : "";
+
+                if (booksHaveSameAuthor(authors1, authors2) && titlesAreSimilar(title1, title2)) {
                     foundDuplicate = true;
 
-                    const newCoversLength = books.current[id].covers ? books.current[id].covers.length : 0;
-                    const oldCoversLength = books.current[oldId].covers ? books.current[oldId].covers.length : 0;
+                    const newCoversLength =
+                        books.current[id] && "covers" in books.current[id] && books.current[id].covers
+                            ? books.current[id].covers.length
+                            : 0;
+                    const oldCoversLength =
+                        books.current[oldId] && "covers" in books.current[oldId] && books.current[oldId].covers
+                            ? books.current[oldId].covers.length
+                            : 0;
 
                     if (newCoversLength > oldCoversLength) result[i] = id;
                 }
