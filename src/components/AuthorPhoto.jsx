@@ -1,33 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import ShowMoreText from "react-show-more-text";
 import SVG from "react-inlinesvg";
 import cn from "classnames";
 
 import { Data } from "../contexts/Data";
-import { API } from "../contexts/API";
 
 import AuthorIcon from "../resources/icons/author.svg";
 
 export default function AuthorPhoto({ authorId, coverHeight, last }) {
     const { authors } = useContext(Data);
-    const { getAuthorInfo } = useContext(API);
 
-    const [authorInfo, setAuthorInfo] = useState(null);
-
-    useEffect(() => {
-        if (!authorId) return;
-
-        const getAuthorData = async () => {
-            if (!(authorId in authors.current)) {
-                const response = await getAuthorInfo(authorId);
-                if ("error" in response) return;
-            }
-
-            setAuthorInfo(authors.current[authorId]);
-        };
-
-        getAuthorData();
-    }, [authorId, authors, getAuthorInfo]);
+    const authorInfo = authors.current[authorId];
 
     const style = {
         height: `${coverHeight}px`,
@@ -46,8 +29,6 @@ export default function AuthorPhoto({ authorId, coverHeight, last }) {
         minWidth: `${coverHeight * 0.65}px`,
         maxWidth: `${coverHeight * 0.65}px`,
     };
-
-    if (authorInfo && "name" in authorInfo) console.log(authorInfo.name);
 
     return authorInfo && "name" in authorInfo ? (
         <div className={cn("AuthorPhoto", "neoDiv", { last })} style={style}>

@@ -1,33 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import ShowMoreText from "react-show-more-text";
 import SVG from "react-inlinesvg";
 import cn from "classnames";
 
 import { Data } from "../contexts/Data";
-import { API } from "../contexts/API";
 
 import Logo from "../resources/icons/logo.svg";
 
 export default function BookCover({ bookId, coverHeight, last, forceShow }) {
     const { books, authors } = useContext(Data);
-    const { getBookInfo } = useContext(API);
 
-    const [bookInfo, setBookInfo] = useState(null);
-
-    useEffect(() => {
-        if (!bookId) return;
-
-        const getBookData = async () => {
-            if (!(bookId in books.current)) {
-                const response = await getBookInfo(bookId);
-                if ("error" in response) return;
-            }
-
-            setBookInfo(books.current[bookId]);
-        };
-
-        getBookData();
-    }, [bookId, books, getBookInfo]);
+    const bookInfo = books.current[bookId];
 
     const style = {
         height: `${coverHeight}px`,

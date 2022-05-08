@@ -348,6 +348,8 @@ const APIProvider = (props) => {
 
             const response = await rawResponse.json();
 
+            await Promise.all(response.books.map(async ({ bookId }) => await getBookInfo(bookId)));
+
             return response;
         } catch (error) {
             return { error: "Unknown error" };
@@ -403,9 +405,6 @@ const APIProvider = (props) => {
             const response = await rawResponse.json();
             const { links, name, birth_date, bio, photos } = response;
 
-            // Get author works
-            // const works = await getAuthorWorks(authorId);
-
             // Parse response
             const parsedResponse = {
                 links,
@@ -457,16 +456,36 @@ const APIProvider = (props) => {
 
             const response = await rawResponse.json();
 
-            const parsedWorks = response.docs
+            let parsedWorks = response.docs
                 .filter(({ type }) => type === "work")
                 .map(({ key }) => key.replace("/works/", ""));
 
-            var parsedAuthors = response.docs
+            let parsedAuthors = response.docs
                 .filter(({ type }) => type === "work")
                 .map(({ author_key }) => author_key || [])
                 .flat();
-
             parsedAuthors = [...new Set(parsedAuthors)];
+
+            await Promise.all(parsedWorks.map(async (bookId) => await getBookInfo(bookId)));
+
+            // parsedWorks = parsedWorks.filter((id) => !!books.current[id].covers);
+            // parsedAuthors = parsedAuthors.filter((id) => !!authors.current[id].photos);
+
+            parsedWorks.sort((first, second) =>
+                books.current[first].covers && books.current[second].covers
+                    ? 0
+                    : books.current[first].covers && !books.current[second].covers
+                    ? -1
+                    : 1
+            );
+
+            parsedAuthors.sort((first, second) =>
+                authors.current[first].photos && authors.current[second].photos
+                    ? 0
+                    : authors.current[first].photos && !authors.current[second].photos
+                    ? -1
+                    : 1
+            );
 
             return { parsedWorks, parsedAuthors };
         } catch (error) {
