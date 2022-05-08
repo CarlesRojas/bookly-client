@@ -447,27 +447,26 @@ const APIProvider = (props) => {
         }
     };
 
-    const searchBooks = async (bookQuery, authorQuery) => {
-        const parsedBookQuery = bookQuery.length ? `&q=${bookQuery.toLowerCase().replaceAll(" ", "+")}` : "";
-        const parsedAuthorQuery = authorQuery.length ? `&author=${authorQuery.toLowerCase().replaceAll(" ", "+")}` : "";
+    const searchBooks = async (bookQuery) => {
+        if (!bookQuery.length) return { parsedWorks: [], parsedAuthors: [] };
 
         try {
             const rawResponse = await fetch(
-                `${OPEN_LIB_API_URL}/search.json?language=eng${parsedBookQuery}${parsedAuthorQuery}`
+                `${OPEN_LIB_API_URL}/search.json?language=eng&q=${bookQuery.toLowerCase().replaceAll(" ", "+")}`
             );
 
             const response = await rawResponse.json();
-
-            console.log(response);
 
             const parsedWorks = response.docs
                 .filter(({ type }) => type === "work")
                 .map(({ key }) => key.replace("/works/", ""));
 
-            const parsedAuthors = response.docs
+            var parsedAuthors = response.docs
                 .filter(({ type }) => type === "work")
                 .map(({ author_key }) => author_key || [])
                 .flat();
+
+            parsedAuthors = [...new Set(parsedAuthors)];
 
             return { parsedWorks, parsedAuthors };
         } catch (error) {

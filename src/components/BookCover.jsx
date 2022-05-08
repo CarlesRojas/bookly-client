@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import Dotdotdot from "react-dotdotdot";
+import ShowMoreText from "react-show-more-text";
 import SVG from "react-inlinesvg";
 import cn from "classnames";
 
@@ -15,7 +15,6 @@ export default function BookCover({ bookId, coverHeight, last, forceShow }) {
     const [bookInfo, setBookInfo] = useState(null);
 
     useEffect(() => {
-        console.log(bookId);
         if (!bookId) return;
 
         const getBookData = async () => {
@@ -51,15 +50,29 @@ export default function BookCover({ bookId, coverHeight, last, forceShow }) {
                     <SVG className="icon" src={Logo} />
 
                     {bookInfo && "title" in bookInfo && (
-                        <Dotdotdot clamp={4}>
+                        <ShowMoreText
+                            lines={4}
+                            className="titleContent"
+                            anchorClass="anchor"
+                            expanded={false}
+                            width={coverHeight * 0.6}
+                            truncatedEndingComponent={"..."}
+                        >
                             <p className="title">{bookInfo.title}</p>
-                        </Dotdotdot>
+                        </ShowMoreText>
                     )}
 
                     {authorInfo && "name" in authorInfo && (
-                        <Dotdotdot clamp={2}>
+                        <ShowMoreText
+                            lines={2}
+                            className="authorContent"
+                            anchorClass="anchor"
+                            expanded={false}
+                            width={coverHeight * 0.6}
+                            truncatedEndingComponent={"..."}
+                        >
                             <p className="author">{authorInfo.name}</p>
-                        </Dotdotdot>
+                        </ShowMoreText>
                     )}
                 </div>
             )}

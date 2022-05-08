@@ -25,20 +25,18 @@ export default function Search() {
     useResize(handleResize, true);
 
     const [loading, setLoading] = useState(false);
-    const bookInputRef = useRef();
-    const authorInputRef = useRef();
+    const inputRef = useRef();
 
     const handleSubmit = async (event) => {
         // Prevent page reload
         event.preventDefault();
 
-        bookInputRef.current.blur();
-        authorInputRef.current.blur();
+        inputRef.current.blur();
 
         setLoading(true);
 
-        const { bookQuery, authorQuery } = document.forms[0];
-        const { parsedWorks, parsedAuthors } = await searchBooks(bookQuery.value, authorQuery.value);
+        const { query } = document.forms[0];
+        const { parsedWorks, parsedAuthors } = await searchBooks(query.value);
 
         if (parsedWorks) setSearchedBooks(parsedWorks);
         if (parsedAuthors) setSearchedAuthors(parsedAuthors);
@@ -79,18 +77,10 @@ export default function Search() {
                     <input
                         className="input neoInput"
                         type="text"
-                        name="bookQuery"
-                        placeholder={"book name"}
+                        name="query"
+                        placeholder={"book title or author"}
                         autocomlete={"new-password"}
-                        ref={bookInputRef}
-                    />
-                    <input
-                        className="input neoInput"
-                        type="text"
-                        name="authorQuery"
-                        placeholder={"author name"}
-                        autocomlete={"new-password"}
-                        ref={authorInputRef}
+                        ref={inputRef}
                     />
                     <button className="submit neoButton" type="submit">
                         {loading ? <SVG className="loadingIcon spin infinite" src={LoadingIcon} /> : "search"}

@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from "react";
-import Dotdotdot from "react-dotdotdot";
+import ShowMoreText from "react-show-more-text";
 import SVG from "react-inlinesvg";
 import cn from "classnames";
 
 import { Data } from "../contexts/Data";
 import { API } from "../contexts/API";
 
-import Logo from "../resources/icons/logo.svg";
+import AuthorIcon from "../resources/icons/author.svg";
 
 export default function AuthorPhoto({ authorId, coverHeight, last }) {
-    const { books, authors } = useContext(Data);
+    const { authors } = useContext(Data);
     const { getAuthorInfo } = useContext(API);
 
     const [authorInfo, setAuthorInfo] = useState(null);
@@ -18,12 +18,9 @@ export default function AuthorPhoto({ authorId, coverHeight, last }) {
         if (!authorId) return;
 
         const getAuthorData = async () => {
-            if (!Object.keys(authors.current).includes(authorId)) {
+            if (!(authorId in authors.current)) {
                 const response = await getAuthorInfo(authorId);
-                if ("error" in response) {
-                    console.log(response.error);
-                    return;
-                }
+                if ("error" in response) return;
             }
 
             setAuthorInfo(authors.current[authorId]);
@@ -41,31 +38,37 @@ export default function AuthorPhoto({ authorId, coverHeight, last }) {
         maxWidth: `${coverHeight * 0.65}px`,
     };
 
-    console.log(authorInfo);
+    const photoStyle = {
+        height: `${coverHeight * 0.75}px`,
+        minHeight: `${coverHeight * 0.75}px`,
+        maxHeight: `${coverHeight * 0.75}px`,
+        width: `${coverHeight * 0.65}px`,
+        minWidth: `${coverHeight * 0.65}px`,
+        maxWidth: `${coverHeight * 0.65}px`,
+    };
 
-    return <div className="AuthorPhoto"></div>;
+    if (authorInfo && "name" in authorInfo) console.log(authorInfo.name);
 
-    // return  (bookInfo && "title" in bookInfo && authorInfo && "name" in authorInfo) ? (
-    //     <div className={cn("AuthorPhoto", "neoDiv", { last })} style={style}>
-    //         {bookInfo && bookInfo.covers && bookInfo.covers.length ? (
-    //             <img src={bookInfo.covers[0]} alt="" className="cover" style={style} />
-    //         ) : (
-    //             <div className="noCoverContainer">
-    //                 <SVG className="icon" src={Logo} />
+    return authorInfo && "name" in authorInfo ? (
+        <div className={cn("AuthorPhoto", "neoDiv", { last })} style={style}>
+            <div className="coverContainer">
+                {authorInfo && authorInfo.photos && authorInfo.photos.length ? (
+                    <img src={authorInfo.photos[0]} alt="" className="photo neoDiv" style={photoStyle} />
+                ) : (
+                    <SVG className="icon neoDiv" src={AuthorIcon} style={photoStyle} />
+                )}
 
-    //                 {bookInfo && "title" in bookInfo && (
-    //                     <Dotdotdot clamp={4}>
-    //                         <p className="title">{bookInfo.title}</p>
-    //                     </Dotdotdot>
-    //                 )}
-
-    //                 {authorInfo && "name" in authorInfo && (
-    //                     <Dotdotdot clamp={2}>
-    //                         <p className="author">{authorInfo.name}</p>
-    //                     </Dotdotdot>
-    //                 )}
-    //             </div>
-    //         )}
-    //     </div>
-    // ) : null;
+                <ShowMoreText
+                    lines={2}
+                    className="content"
+                    anchorClass="anchor"
+                    expanded={false}
+                    width={coverHeight * 0.6}
+                    truncatedEndingComponent={"..."}
+                >
+                    <p className="author">{authorInfo.name}</p>
+                </ShowMoreText>
+            </div>
+        </div>
+    ) : null;
 }
