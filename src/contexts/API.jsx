@@ -536,6 +536,7 @@ const APIProvider = (props) => {
                 register,
                 login,
                 isLoggedIn,
+                logout,
                 tryToLogInWithToken,
                 changeEmail,
                 changePassword,

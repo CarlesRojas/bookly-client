@@ -65,15 +65,16 @@ export default function App() {
     // #################################################
 
     const handleLogout = useCallback(() => {
+        loadedDone.current = false;
         setDataLoaded(false);
-        setLoggedIn(null);
+        setLoggedIn(false);
     }, []);
 
     useEffect(() => {
         sub("onLogout", handleLogout);
 
         return () => {
-            unsub("onLoginError", handleLogout);
+            unsub("onLogout", handleLogout);
         };
     }, [handleLogout, sub, unsub]);
 
