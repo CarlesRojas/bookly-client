@@ -68,8 +68,8 @@ const DataProvider = (props) => {
     //   SEARCH
     // #################################################
 
-    const [searchedAuthors, setSearchedAuthors] = useState([{ authorId: 1 }, { authorId: 2 }]);
-    const [searchedBooks, setSearchedBooks] = useState([{ bookId: 45 }]);
+    const [searchedAuthors, setSearchedAuthors] = useState([]);
+    const [searchedBooks, setSearchedBooks] = useState([]);
 
     return (
         <Data.Provider

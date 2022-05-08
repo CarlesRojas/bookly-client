@@ -25,16 +25,23 @@ export default function Search() {
     useResize(handleResize, true);
 
     const [loading, setLoading] = useState(false);
+    const bookInputRef = useRef();
+    const authorInputRef = useRef();
 
     const handleSubmit = async (event) => {
         // Prevent page reload
         event.preventDefault();
 
+        bookInputRef.current.blur();
+        authorInputRef.current.blur();
+
         setLoading(true);
 
         const { bookQuery, authorQuery } = document.forms[0];
-        const result = await searchBooks(bookQuery.value, authorQuery.value);
-        setSearchedBooks(result);
+        const { parsedWorks, parsedAuthors } = await searchBooks(bookQuery.value, authorQuery.value);
+
+        if (parsedWorks) setSearchedBooks(parsedWorks);
+        if (parsedAuthors) setSearchedAuthors(parsedAuthors);
 
         setLoading(false);
     };
@@ -44,10 +51,10 @@ export default function Search() {
             <div className={cn("results", { visible: searchedAuthors.length || searchedBooks.length })}>
                 <p className="section">authors</p>
                 <div className="container" style={{ height: `${coverHeight + 16}px` }}>
-                    {searchedAuthors.map((authorData, i) => (
+                    {searchedAuthors.map((authorId, i) => (
                         <AuthorPhoto
-                            key={authorData.authorId}
-                            authorData={authorData}
+                            key={authorId}
+                            authorId={authorId}
                             coverHeight={coverHeight}
                             last={i === searchedAuthors.length - 1}
                         />
@@ -59,7 +66,7 @@ export default function Search() {
                     {searchedBooks.map((bookId, i) => (
                         <BookCover
                             key={bookId}
-                            bookData={{ bookId }}
+                            bookId={bookId}
                             coverHeight={coverHeight}
                             last={i === searchedBooks.length - 1}
                         />
@@ -75,6 +82,7 @@ export default function Search() {
                         name="bookQuery"
                         placeholder={"book name"}
                         autocomlete={"new-password"}
+                        ref={bookInputRef}
                     />
                     <input
                         className="input neoInput"
@@ -82,6 +90,7 @@ export default function Search() {
                         name="authorQuery"
                         placeholder={"author name"}
                         autocomlete={"new-password"}
+                        ref={authorInputRef}
                     />
                     <button className="submit neoButton" type="submit">
                         {loading ? <SVG className="loadingIcon spin infinite" src={LoadingIcon} /> : "search"}

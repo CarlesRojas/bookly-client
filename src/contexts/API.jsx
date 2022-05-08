@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef } from "react";
+import { createContext, useContext } from "react";
 
 // Contexts
 import { Utils } from "./Utils";
@@ -360,10 +360,12 @@ const APIProvider = (props) => {
 
     const getBookInfo = async (bookId) => {
         try {
+            if (bookId in books.current) return books.current[bookId];
+
             const rawResponse = await fetch(`${OPEN_LIB_API_URL}/works/${bookId}.json`);
 
             const response = await rawResponse.json();
-            const { description, links, title, authors, covers } = response;
+            const { description, links, title, authors: bookAuthors, covers } = response;
 
             // Parse response
             const parsedResponse = {
@@ -371,21 +373,20 @@ const APIProvider = (props) => {
                 description,
                 links,
                 title,
-                authors: authors.map(({ author }) => author.key.replace("/authors/", "")),
-                covers: covers
-                    ? covers
-                          .filter((coverKey) => coverKey !== -1)
-                          .map((coverKey) => `https://covers.openlibrary.org/b/id/${coverKey}-${IMAGE_SIZE}.jpg`)
-                    : null,
+                authors: bookAuthors.map(({ author }) => author.key.replace("/authors/", "")),
+                covers:
+                    covers && covers.length
+                        ? covers
+                              .filter((coverKey) => coverKey !== -1)
+                              .map((coverKey) => `https://covers.openlibrary.org/b/id/${coverKey}-${IMAGE_SIZE}.jpg`)
+                        : null,
             };
 
             // Update book
             books.current[bookId] = parsedResponse;
 
             // Get authors info
-            parsedResponse.authors.forEach((authorId) => {
-                getAuthorInfo(authorId);
-            });
+            await Promise.all(parsedResponse.authors.map(async (authorId) => await getAuthorInfo(authorId)));
 
             return parsedResponse;
         } catch (error) {
@@ -393,11 +394,9 @@ const APIProvider = (props) => {
         }
     };
 
-    const fetchedAuthors = useRef({});
     const getAuthorInfo = async (authorId) => {
         try {
-            if (authorId in fetchedAuthors.current) return fetchedAuthors.current[authorId];
-            fetchedAuthors.current[authorId] = null;
+            if (authorId in authors.current) return authors.current[authorId];
 
             const rawResponse = await fetch(`${OPEN_LIB_API_URL}/authors/${authorId}.json`);
 
@@ -415,13 +414,15 @@ const APIProvider = (props) => {
                 birth_date,
                 bio,
                 works: null,
-                photos: photos
-                    .filter((photoKey) => photoKey !== -1)
-                    .map((photoKey) => `https://covers.openlibrary.org/b/id/${photoKey}-${IMAGE_SIZE}.jpg`),
+                photos:
+                    photos && photos.length
+                        ? photos
+                              .filter((photoKey) => photoKey !== -1)
+                              .map((photoKey) => `https://covers.openlibrary.org/b/id/${photoKey}-${IMAGE_SIZE}.jpg`)
+                        : null,
             };
 
             // Update author
-            fetchedAuthors.current[authorId] = parsedResponse;
             authors.current[authorId] = parsedResponse;
 
             return parsedResponse;
@@ -447,7 +448,7 @@ const APIProvider = (props) => {
     };
 
     const searchBooks = async (bookQuery, authorQuery) => {
-        const parsedBookQuery = bookQuery.length ? `&title=${bookQuery.toLowerCase().replaceAll(" ", "+")}` : "";
+        const parsedBookQuery = bookQuery.length ? `&q=${bookQuery.toLowerCase().replaceAll(" ", "+")}` : "";
         const parsedAuthorQuery = authorQuery.length ? `&author=${authorQuery.toLowerCase().replaceAll(" ", "+")}` : "";
 
         try {
@@ -457,11 +458,18 @@ const APIProvider = (props) => {
 
             const response = await rawResponse.json();
 
-            const parsedResponse = response.docs
+            console.log(response);
+
+            const parsedWorks = response.docs
                 .filter(({ type }) => type === "work")
                 .map(({ key }) => key.replace("/works/", ""));
 
-            return parsedResponse;
+            const parsedAuthors = response.docs
+                .filter(({ type }) => type === "work")
+                .map(({ author_key }) => author_key || [])
+                .flat();
+
+            return { parsedWorks, parsedAuthors };
         } catch (error) {
             return { error: `Get author info error: ${error}` };
         }

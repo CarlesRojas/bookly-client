@@ -1,28 +1,29 @@
 import { useContext, useEffect, useState } from "react";
+import Dotdotdot from "react-dotdotdot";
+import SVG from "react-inlinesvg";
 import cn from "classnames";
 
 import { Data } from "../contexts/Data";
 import { API } from "../contexts/API";
 
-export default function BookCover({ bookData, coverHeight, last }) {
-    const { books } = useContext(Data);
-    const { getBookInfo } = useContext(API);
+import Logo from "../resources/icons/logo.svg";
 
-    const { bookId } = bookData;
+export default function BookCover({ bookId, coverHeight, last, forceShow }) {
+    const { books, authors } = useContext(Data);
+    const { getBookInfo } = useContext(API);
 
     const [bookInfo, setBookInfo] = useState(null);
 
     useEffect(() => {
+        console.log(bookId);
+        if (!bookId) return;
+
         const getBookData = async () => {
-            if (!Object.keys(books.current).includes(bookId)) {
+            if (!(bookId in books.current)) {
                 const response = await getBookInfo(bookId);
-                if ("error" in response) {
-                    console.log(response.error);
-                    return;
-                }
+                if ("error" in response) return;
             }
 
-            console.log("SET BOOK DATA");
             setBookInfo(books.current[bookId]);
         };
 
@@ -38,13 +39,30 @@ export default function BookCover({ bookData, coverHeight, last }) {
         maxWidth: `${coverHeight * 0.65}px`,
     };
 
-    console.log(bookInfo);
+    const authorInfo =
+        bookInfo && "authors" in bookInfo && bookInfo.authors.length ? authors.current[bookInfo.authors[0]] : null;
 
-    return (
-        <div className={cn("BookCover", "newDiv", { last })} style={style}>
+    return forceShow || (bookInfo && "title" in bookInfo && authorInfo && "name" in authorInfo) ? (
+        <div className={cn("BookCover", "neoDiv", { last })} style={style}>
             {bookInfo && bookInfo.covers && bookInfo.covers.length ? (
                 <img src={bookInfo.covers[0]} alt="" className="cover" style={style} />
-            ) : null}
+            ) : (
+                <div className="noCoverContainer">
+                    <SVG className="icon" src={Logo} />
+
+                    {bookInfo && "title" in bookInfo && (
+                        <Dotdotdot clamp={4}>
+                            <p className="title">{bookInfo.title}</p>
+                        </Dotdotdot>
+                    )}
+
+                    {authorInfo && "name" in authorInfo && (
+                        <Dotdotdot clamp={2}>
+                            <p className="author">{authorInfo.name}</p>
+                        </Dotdotdot>
+                    )}
+                </div>
+            )}
         </div>
-    );
+    ) : null;
 }

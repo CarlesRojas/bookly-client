@@ -24,9 +24,10 @@ export default function Home() {
                 {readingBooks.map((bookData, i) => (
                     <BookCover
                         key={bookData.bookId}
-                        bookData={bookData}
+                        bookId={bookData.bookId}
                         coverHeight={coverHeight}
                         last={i === readingBooks.length - 1}
+                        forceShow
                     />
                 ))}
             </div>
@@ -36,9 +37,10 @@ export default function Home() {
                 {wantToReadBooks.map((bookData, i) => (
                     <BookCover
                         key={bookData.bookId}
-                        bookData={bookData}
+                        bookId={bookData.bookId}
                         coverHeight={coverHeight}
                         last={i === wantToReadBooks.length - 1}
+                        forceShow
                     />
                 ))}
             </div>
@@ -48,9 +50,10 @@ export default function Home() {
                 {finishedBooks.map((bookData, i) => (
                     <BookCover
                         key={bookData.bookId}
-                        bookData={bookData}
+                        bookId={bookData.bookId}
                         coverHeight={coverHeight}
                         last={i === finishedBooks.length - 1}
+                        forceShow
                     />
                 ))}
             </div>
