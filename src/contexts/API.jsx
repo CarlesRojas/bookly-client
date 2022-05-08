@@ -14,7 +14,16 @@ const IMAGE_SIZE = "M"; // "M" "L"
 export const API = createContext();
 const APIProvider = (props) => {
     const { getInfo, setInfo, clearInfo } = useContext(Utils);
-    const { APP_NAME, token, user, books, authors, changeUserBookStatus } = useContext(Data);
+    const {
+        APP_NAME,
+        token,
+        user,
+        books,
+        authors,
+        changeUserBookStatus,
+        filterDuplicateAuthors,
+        filterDuplicateBooks,
+    } = useContext(Data);
     const { emit } = useContext(Events);
     const { set, get } = useContext(GlobalState);
 
@@ -384,8 +393,11 @@ const APIProvider = (props) => {
                         : null,
             };
 
+            if (parsedResponse.covers && parsedResponse.covers.length <= 0) parsedResponse.covers = null;
+
             // Update book
             books.current[bookId] = parsedResponse;
+            setInfo(`${APP_NAME}_books`, { ...books.current });
 
             // Get authors info
             await Promise.all(parsedResponse.authors.map(async (authorId) => await getAuthorInfo(authorId)));
@@ -421,8 +433,11 @@ const APIProvider = (props) => {
                         : null,
             };
 
+            if (parsedResponse.photos && parsedResponse.photos.length <= 0) parsedResponse.photos = null;
+
             // Update author
             authors.current[authorId] = parsedResponse;
+            setInfo(`${APP_NAME}_authors`, { ...authors.current });
 
             return parsedResponse;
         } catch (error) {
@@ -451,7 +466,9 @@ const APIProvider = (props) => {
 
         try {
             const rawResponse = await fetch(
-                `${OPEN_LIB_API_URL}/search.json?language=eng&q=${bookQuery.toLowerCase().replaceAll(" ", "+")}`
+                `${OPEN_LIB_API_URL}/search.json?language=eng&limit=30&q=${bookQuery
+                    .toLowerCase()
+                    .replaceAll(" ", "+")}`
             );
 
             const response = await rawResponse.json();
@@ -468,24 +485,43 @@ const APIProvider = (props) => {
 
             await Promise.all(parsedWorks.map(async (bookId) => await getBookInfo(bookId)));
 
+            // Remove books without cover
             // parsedWorks = parsedWorks.filter((id) => !!books.current[id].covers);
             // parsedAuthors = parsedAuthors.filter((id) => !!authors.current[id].photos);
 
-            parsedWorks.sort((first, second) =>
-                books.current[first].covers && books.current[second].covers
-                    ? 0
-                    : books.current[first].covers && !books.current[second].covers
-                    ? -1
-                    : 1
-            );
+            // Remove duplicates
+            parsedWorks = filterDuplicateBooks(parsedWorks);
+            parsedAuthors = filterDuplicateAuthors(parsedAuthors);
 
-            parsedAuthors.sort((first, second) =>
-                authors.current[first].photos && authors.current[second].photos
-                    ? 0
-                    : authors.current[first].photos && !authors.current[second].photos
-                    ? -1
-                    : 1
-            );
+            parsedWorks.sort((first, second) => {
+                if (!(first in books.current) || books.current[first] === null) return 1;
+                if (!(second in books.current) || books.current[second] === null) return -1;
+
+                const result =
+                    (!books.current[first].covers && !books.current[second].covers) ||
+                    (books.current[first].covers && books.current[second].covers)
+                        ? 0
+                        : books.current[first].covers && !books.current[second].covers
+                        ? -1
+                        : 1;
+
+                return result;
+            });
+
+            parsedAuthors.sort((first, second) => {
+                if (!(first in authors.current) || authors.current[first] === null) return 1;
+                if (!(second in authors.current) || authors.current[second] === null) return -1;
+
+                const result =
+                    (!authors.current[first].photos && !authors.current[second].photos) ||
+                    (authors.current[first].photos && authors.current[second].photos)
+                        ? 0
+                        : authors.current[first].photos && !authors.current[second].photos
+                        ? -1
+                        : 1;
+
+                return result;
+            });
 
             return { parsedWorks, parsedAuthors };
         } catch (error) {

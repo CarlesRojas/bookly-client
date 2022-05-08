@@ -8,13 +8,15 @@ import { MediaQuery } from "./contexts/MediaQuery";
 import { Events } from "./contexts/Events";
 import { GlobalState } from "./contexts/GlobalState";
 import { Data } from "./contexts/Data";
+import { Utils } from "./contexts/Utils";
 
 export default function App() {
     const { isLoggedIn, getAllUserBooks } = useContext(API);
     const { isMobile, isTablet, isMobileSize, isLandscape } = useContext(MediaQuery);
     const { sub, unsub } = useContext(Events);
     const { set } = useContext(GlobalState);
-    const { setUserBooks } = useContext(Data);
+    const { APP_NAME, setUserBooks, books, authors } = useContext(Data);
+    const { getInfo } = useContext(Utils);
 
     // #################################################
     //   LOGIN
@@ -41,6 +43,10 @@ export default function App() {
             if (loggedIn && !loadedDone.current) {
                 loadedDone.current = true;
 
+                // Load previous session books and authors from local storage
+                books.current = getInfo(`${APP_NAME}_books`) || [];
+                authors.current = getInfo(`${APP_NAME}_authors`) || [];
+
                 // Get user books
                 const userBooksResult = await getAllUserBooks();
                 if (!("error" in userBooksResult)) {
@@ -52,7 +58,7 @@ export default function App() {
         };
 
         loadData();
-    }, [loggedIn, dataLoaded, getAllUserBooks, setUserBooks, set]);
+    }, [loggedIn, dataLoaded, getAllUserBooks, setUserBooks, set, APP_NAME, authors, books, getInfo]);
 
     // #################################################
     //   EVENTS

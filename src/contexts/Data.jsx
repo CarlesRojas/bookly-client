@@ -71,6 +71,69 @@ const DataProvider = (props) => {
     const [searchedAuthors, setSearchedAuthors] = useState([]);
     const [searchedBooks, setSearchedBooks] = useState([]);
 
+    const filterDuplicateAuthors = (authorIds) => {
+        const result = [];
+
+        for (const id of authorIds) {
+            let foundDuplicate = false;
+
+            for (let i = 0; i < result.length; i++) {
+                const oldId = result[i];
+
+                if (authors.current[id].name === authors.current[oldId].name) {
+                    foundDuplicate = true;
+
+                    const newPhotosLength = authors.current[id].photos ? authors.current[id].photos.length : 0;
+                    const oldPhotosLength = authors.current[oldId].photos ? authors.current[oldId].photos.length : 0;
+                    if (newPhotosLength > oldPhotosLength) result[i] = id;
+                }
+            }
+
+            if (!foundDuplicate) result.push(id);
+        }
+
+        return result;
+    };
+
+    const booksHaveSameAuthor = (authors1, authors2) => {
+        for (const authorId of authors1) {
+            if (authors2.includes(authorId)) return true;
+        }
+        return false;
+    };
+
+    const titlesAreSimilar = (title1, title2) => {
+        return title1.includes(title2) || title2.includes(title1);
+    };
+
+    const filterDuplicateBooks = (booksIds) => {
+        const result = [];
+
+        for (const id of booksIds) {
+            let foundDuplicate = false;
+
+            for (let i = 0; i < result.length; i++) {
+                const oldId = result[i];
+
+                if (
+                    booksHaveSameAuthor(books.current[id].authors, books.current[oldId].authors) &&
+                    titlesAreSimilar(books.current[id].title, books.current[oldId].title)
+                ) {
+                    foundDuplicate = true;
+
+                    const newCoversLength = books.current[id].covers ? books.current[id].covers.length : 0;
+                    const oldCoversLength = books.current[oldId].covers ? books.current[oldId].covers.length : 0;
+
+                    if (newCoversLength > oldCoversLength) result[i] = id;
+                }
+            }
+
+            if (!foundDuplicate) result.push(id);
+        }
+
+        return result;
+    };
+
     return (
         <Data.Provider
             value={{
@@ -96,6 +159,8 @@ const DataProvider = (props) => {
                 setSearchedAuthors,
                 searchedBooks,
                 setSearchedBooks,
+                filterDuplicateAuthors,
+                filterDuplicateBooks,
             }}
         >
             {props.children}
