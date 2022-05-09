@@ -80,11 +80,21 @@ const DataProvider = (props) => {
             for (let i = 0; i < result.length; i++) {
                 const oldId = result[i];
 
-                if (authors.current[id].name === authors.current[oldId].name) {
+                const name1 = authors.current[id] && "name" in authors.current[id] ? authors.current[id].name : "";
+                const name2 =
+                    authors.current[oldId] && "name" in authors.current[oldId] ? authors.current[oldId].name : "-";
+
+                if (name1 === name2) {
                     foundDuplicate = true;
 
-                    const newPhotosLength = authors.current[id].photos ? authors.current[id].photos.length : 0;
-                    const oldPhotosLength = authors.current[oldId].photos ? authors.current[oldId].photos.length : 0;
+                    const newPhotosLength =
+                        authors.current[id] && "photos" in authors.current[id] && authors.current[id].photos
+                            ? authors.current[id].photos.length
+                            : 0;
+                    const oldPhotosLength =
+                        authors.current[oldId] && "photos" in authors.current[oldId] && authors.current[oldId].photos
+                            ? authors.current[oldId].photos.length
+                            : 0;
                     if (newPhotosLength > oldPhotosLength) result[i] = id;
                 }
             }

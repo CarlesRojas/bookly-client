@@ -525,6 +525,7 @@ const APIProvider = (props) => {
 
             return { parsedWorks, parsedAuthors };
         } catch (error) {
+            console.log(error);
             return { error: `Get author info error: ${error}` };
         }
     };

@@ -15,7 +15,7 @@ export default function Search() {
     const { searchBooks } = useContext(API);
 
     const containerRef = useRef();
-    const [hideResults, setHideResults] = useState(true);
+    const [hideResults, setHideResults] = useState(false);
     const [coverHeight, setCoverHeight] = useState(0);
 
     const handleResize = () => {
