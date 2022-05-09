@@ -13,7 +13,7 @@ export default function Settings() {
     // }, [emit]);
 
     const showAuthor = () => {
-        emit("onNewPage", "first");
+        emit("onNewPage", { pageId: `id`, type: "author" });
     };
     // #################################################
     //   EVENTS
