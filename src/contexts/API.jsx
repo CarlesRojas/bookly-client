@@ -357,7 +357,7 @@ const APIProvider = (props) => {
 
             const response = await rawResponse.json();
 
-            await Promise.all(response.books.map(async ({ bookId }) => await getBookInfo(bookId)));
+            await Promise.all(response.books.map(async ({ bookId }) => await searchBooks(bookId, true)));
 
             return response;
         } catch (error) {
@@ -369,7 +369,7 @@ const APIProvider = (props) => {
     //   OPEN LIBRARY API
     // #################################################
 
-    const getBookInfo = async (bookId) => {
+    const getBookInfo = async (bookId, extraInfo = {}) => {
         try {
             if (bookId in books.current) return books.current[bookId];
 
@@ -379,7 +379,7 @@ const APIProvider = (props) => {
             const { description, links, title, authors: bookAuthors, covers } = response;
 
             // Parse response
-            const parsedResponse = {
+            let parsedResponse = {
                 bookId,
                 description,
                 links,
@@ -394,6 +394,9 @@ const APIProvider = (props) => {
             };
 
             if (parsedResponse.covers && parsedResponse.covers.length <= 0) parsedResponse.covers = null;
+
+            // Add extra info
+            parsedResponse = { ...parsedResponse, ...extraInfo };
 
             // Update book
             books.current[bookId] = parsedResponse;
@@ -461,8 +464,10 @@ const APIProvider = (props) => {
         }
     };
 
-    const searchBooks = async (bookQuery) => {
+    const searchBooks = async (bookQuery, single = false) => {
         if (!bookQuery.length) return { parsedWorks: [], parsedAuthors: [] };
+
+        if (single && bookQuery in books.current) return;
 
         try {
             const rawResponse = await fetch(
@@ -473,6 +478,7 @@ const APIProvider = (props) => {
 
             const response = await rawResponse.json();
 
+            // Parse ids
             let parsedWorks = response.docs
                 .filter(({ type }) => type === "work")
                 .map(({ key }) => key.replace("/works/", ""));
@@ -483,7 +489,24 @@ const APIProvider = (props) => {
                 .flat();
             parsedAuthors = [...new Set(parsedAuthors)];
 
-            await Promise.all(parsedWorks.map(async (bookId) => await getBookInfo(bookId)));
+            // Get aditional info
+            const extraWorksInfo = {};
+            for (const result of response.docs) {
+                const { key, publish_date, id_amazon, id_goodreads, id_librarything, number_of_pages_median } = result;
+
+                const bookKey = key.replace("/works/", "");
+
+                if (parsedWorks.includes(bookKey))
+                    extraWorksInfo[bookKey] = {
+                        publishDate: publish_date && publish_date.length > 0 ? publish_date[0] : null,
+                        amazonId: id_amazon && id_amazon.length > 0 ? id_amazon[0] : null,
+                        goodreadsId: id_goodreads && id_goodreads.length > 0 ? id_goodreads[0] : null,
+                        libraryThingId: id_librarything && id_librarything.length > 0 ? id_librarything[0] : null,
+                        numPages: number_of_pages_median || null,
+                    };
+            }
+
+            await Promise.all(parsedWorks.map(async (bookId) => await getBookInfo(bookId, extraWorksInfo[bookId])));
 
             // Remove books without cover
             // parsedWorks = parsedWorks.filter((id) => !!books.current[id].covers);
