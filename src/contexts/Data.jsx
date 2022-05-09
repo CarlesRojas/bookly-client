@@ -60,9 +60,41 @@ const DataProvider = (props) => {
         setReadingBooks(reading);
     };
 
+    // Call only when the api to change the score has returned without erros
+    const changeUserBookScore = (bookId, updatedBookInfo) => {
+        for (const i in finishedBooks) {
+            const { bookId: id } = finishedBooks[i];
+
+            if (bookId === id) {
+                setFinishedBooks((prev) => {
+                    const copy = [...prev];
+                    copy[i] = { ...updatedBookInfo };
+                    return copy;
+                });
+                return;
+            }
+        }
+    };
+
     const [finishedBooks, setFinishedBooks] = useState([]);
     const [wantToReadBooks, setWantToReadBooks] = useState([]);
     const [readingBooks, setReadingBooks] = useState([]);
+
+    const getBookStatus = (id) => {
+        for (const bookInfo of finishedBooks) {
+            if (id === bookInfo.bookId) return { ...bookInfo };
+        }
+
+        for (const bookInfo of wantToReadBooks) {
+            if (id === bookInfo.bookId) return { ...bookInfo };
+        }
+
+        for (const bookInfo of readingBooks) {
+            if (id === bookInfo.bookId) return { ...bookInfo };
+        }
+
+        return {};
+    };
 
     // #################################################
     //   SEARCH
@@ -173,6 +205,8 @@ const DataProvider = (props) => {
                 wantToReadBooks,
                 readingBooks,
                 changeUserBookStatus,
+                changeUserBookScore,
+                getBookStatus,
 
                 // SEARCH
                 searchedAuthors,

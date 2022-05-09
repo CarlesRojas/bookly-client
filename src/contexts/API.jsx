@@ -21,6 +21,7 @@ const APIProvider = (props) => {
         books,
         authors,
         changeUserBookStatus,
+        changeUserBookScore,
         filterDuplicateAuthors,
         filterDuplicateBooks,
     } = useContext(Data);
@@ -285,6 +286,7 @@ const APIProvider = (props) => {
                     Accept: "application/json, text/plain, */*",
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*",
+                    token: token.current,
                 },
                 body: JSON.stringify(postData),
             });
@@ -309,11 +311,15 @@ const APIProvider = (props) => {
                     Accept: "application/json, text/plain, */*",
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*",
+                    token: token.current,
                 },
                 body: JSON.stringify(postData),
             });
 
             const response = await rawResponse.json();
+
+            if ("error" in response) return false;
+            else changeUserBookScore(bookId, response);
 
             return response;
         } catch (error) {
@@ -331,6 +337,7 @@ const APIProvider = (props) => {
                     Accept: "application/json, text/plain, */*",
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*",
+                    token: token.current,
                 },
                 body: JSON.stringify(postData),
             });

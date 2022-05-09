@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import cn from "classnames";
 import SVG from "react-inlinesvg";
 import useThrottle from "../../hooks/useThrottle";

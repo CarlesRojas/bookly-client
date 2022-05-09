@@ -16,6 +16,7 @@
         "react-responsive": "^9.0.0-beta.6",
         "react-scripts": "5.0.0",
         "react-show-more-text": "^1.5.2",
+        "react-showdown": "^2.3.1",
         "react-spring": "^9.4.2",
         "sass": "^1.49.0"
     },
