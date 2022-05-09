@@ -23,7 +23,7 @@ export default function Score({ bookId, score }) {
     useResize(handleResize, true);
 
     // #################################################
-    //   MOUSE DRAG TO CHOOSE SCORE
+    //   DRAG TO CHOOSE SCORE
     // #################################################
 
     const scoring = useRef(false);
@@ -74,37 +74,6 @@ export default function Score({ bookId, score }) {
         changeBookScore(bookId, currScore);
         scoring.current = false;
     }, [currScore, changeBookScore, bookId]);
-
-    // #################################################
-    //   TOUCH DRAG TO CHOOSE SCORE
-    // #################################################
-
-    // const scoringTouch = useRef(false);
-
-    // const handleTouchDown = useCallback(() => {
-    //     scoringTouch.current = true;
-    // }, []);
-
-    // const handleTouchMove = useCallback(
-    //     (event) => {
-    //         if (!scoringTouch.current) return;
-    //         calculateNewScore(event);
-    //     },
-    //     [calculateNewScore]
-    // );
-
-    // const handleTouchUp = useCallback(
-    //     (event) => {
-    //         if (!scoringTouch.current) return;
-    //         console.log(event);
-
-    //         const newScore = calculateNewScore(event);
-    //         scoringTouch.current = false;
-
-    //         console.log(`SAVE SCORE ${newScore}`);
-    //     },
-    //     [calculateNewScore]
-    // );
 
     // #################################################
     //   EVENTS

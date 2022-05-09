@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import SVG from "react-inlinesvg";
 import MarkdownView from "react-showdown";
 
@@ -6,6 +6,10 @@ import { Data } from "../../contexts/Data";
 import { Events } from "../../contexts/Events";
 
 import Logo from "../../resources/icons/logo.svg";
+import AmazonIcon from "../../resources/icons/amazon.svg";
+import GoodreadsIcon from "../../resources/icons/goodreads.svg";
+import LibrarythingIcon from "../../resources/icons/librarything.svg";
+import LinkIcon from "../../resources/icons/link.svg";
 import Score from "../Score";
 
 const MONTHS = [
@@ -34,7 +38,15 @@ export default function Book({ id }) {
     const handleAuthorClicked = (authorId) => {
         emit("onNewPage", { pageId: authorId, type: "author" });
     };
-    //
+
+    // #################################################
+    //   NEW PAGE FOR LINKS
+    // #################################################
+
+    useEffect(() => {
+        document.querySelectorAll("div #description a").forEach((item) => (item.target = "_blank"));
+    });
+
     // #################################################
     //   BOOK DATA
     // #################################################
@@ -42,13 +54,13 @@ export default function Book({ id }) {
     if (!(id in books.current)) return null;
 
     const {
-        // amazonId,
+        amazonId,
         authors: bookAuthors,
         covers,
         description,
-        // goodreadsId,
-        // libraryThingId,
-        // links,
+        goodreadsId,
+        libraryThingId,
+        links,
         numPages,
         publishDate,
         title,
@@ -62,11 +74,32 @@ export default function Book({ id }) {
     const correctDescription =
         typeof description === "string" ? description : "value" in description ? description.value : null;
 
+    let bookLinks = [];
+    if (amazonId)
+        bookLinks.push({
+            title: "amazon",
+            url: `https://www.amazon.com/exec/obidos/ASIN/${amazonId}`,
+            icon: AmazonIcon,
+        });
+    if (goodreadsId)
+        bookLinks.push({
+            title: "goodreads",
+            url: `https://www.goodreads.com/book/show/${goodreadsId}`,
+            icon: GoodreadsIcon,
+        });
+    if (libraryThingId)
+        bookLinks.push({
+            title: "librarything",
+            url: `https://www.librarything.com/work/${libraryThingId}`,
+            icon: LibrarythingIcon,
+        });
+    if (links)
+        for (const linkInfo of links) bookLinks.push({ title: linkInfo.title, url: linkInfo.url, icon: LinkIcon });
+    bookLinks = bookLinks.slice(0, 4);
+
     // #################################################
     //   RENDER
     // #################################################
-
-    console.log(correctDescription);
 
     return (
         <div className="Book">
@@ -110,10 +143,22 @@ export default function Book({ id }) {
                 {correctDescription && (
                     <MarkdownView
                         className="description"
+                        id="description"
                         markdown={correctDescription}
                         options={{ omitExtraWLInCodeBlocks: true, tables: true, emoji: true }}
                     />
                 )}
+
+                <div className="links">
+                    {bookLinks.map(({ title, url, icon }, i) => (
+                        <div className="link neoDiv" onClick={() => window.open(url, "_blank")} key={i}>
+                            <div className="linkInfoContainer">
+                                <SVG className="linkIcon" src={icon} />
+                                <p className="linkName">{title}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
