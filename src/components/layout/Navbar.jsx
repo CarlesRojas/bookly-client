@@ -31,56 +31,50 @@ const PAGES = [
 ];
 
 export default function Navbar({ setPage, currentPage }) {
-    const { sub, unsub } = useContext(Events);
+    const { sub, unsub, emit } = useContext(Events);
 
     // #################################################
     //   STATE
     // #################################################
 
     const [selected, updateSelected] = useState(currentPage.current);
-    const prevPage = useRef(0);
 
     const setSelected = useThrottle((newIndex) => {
         if (selected === newIndex) return;
 
         currentPage.current = newIndex;
-        prevPage.current = newIndex;
         updateSelected(newIndex);
         setPage(newIndex);
     }, 300);
 
     // #################################################
-    //   AUTHOR AND BOOK PAGES
+    //   BACK BUTTON
     // #################################################
 
-    const updatePage = useCallback(
-        (newIndex) => {
-            if (selected === newIndex) return;
-            currentPage.current = newIndex;
-            updateSelected(newIndex);
-            setPage(newIndex);
-        },
-        [currentPage, selected, setPage]
-    );
+    const [showBack, setShowBack] = useState(false);
+
+    const handleShowBackButton = useCallback((show) => {
+        setShowBack(show);
+    }, []);
 
     // #################################################
     //   EVENTS
     // #################################################
 
     useEffect(() => {
-        sub("onSetPage", updatePage);
+        sub("onShowBackButton", handleShowBackButton);
 
         return () => {
-            unsub("onSetPage", updatePage);
+            unsub("onShowBackButton", handleShowBackButton);
         };
-    }, [updatePage, sub, unsub]);
+    }, [handleShowBackButton, sub, unsub]);
 
     // #################################################
     //   RENDER
     // #################################################
 
     return (
-        <div className={cn("Navbar", { showBack: selected >= 4 })}>
+        <div className={cn("Navbar", { showBack })}>
             <div className="main neoButton">
                 {PAGES.map(({ name, icon }, i) => (
                     <SVG
@@ -91,7 +85,7 @@ export default function Navbar({ setPage, currentPage }) {
                     />
                 ))}
             </div>
-            <div className="back neoButton" onClick={() => setSelected(prevPage.current)}>
+            <div className="back neoButton" onClick={() => emit("onBackButtonClicked")}>
                 <SVG className="icon" src={BackIcon} />
                 <p>back</p>
             </div>

@@ -5,11 +5,10 @@ import Home from "../pages/Home";
 import Search from "../pages/Search";
 import Stats from "../pages/Stats";
 import Settings from "../pages/Settings";
-import Book from "../pages/Book";
-import Author from "../pages/Author";
 import Navbar from "./Navbar";
+import Popup from "./Popup";
 
-const STAGES = ["home", "search", "stats", "settings", "book", "author"];
+const STAGES = ["home", "search", "stats", "settings"];
 
 export default function MobileLayout() {
     // #################################################
@@ -24,8 +23,6 @@ export default function MobileLayout() {
         else if (id === "search") return <Search />;
         else if (id === "stats") return <Stats />;
         else if (id === "settings") return <Settings />;
-        else if (id === "book") return <Book />;
-        else if (id === "author") return <Author />;
         else return null;
     });
     const [{ renderedPages, setPage }] = usePageAnimation({
@@ -44,6 +41,8 @@ export default function MobileLayout() {
     return (
         <div className="MobileLayout">
             <div className="mainPagesContent">{renderedPages}</div>
+
+            <Popup />
 
             <Navbar setPage={setPage} currentPage={currentPage} />
         </div>
