@@ -1,8 +1,10 @@
 import { useContext, useEffect, useCallback, useState } from "react";
-import cs from "classnames";
+import cn from "classnames";
 import { useTransition, animated } from "react-spring";
 
 import { Events } from "../../contexts/Events";
+import Author from "../pages/Author";
+import Book from "../pages/Book";
 
 export default function Popup() {
     const { sub, unsub, emit } = useContext(Events);
@@ -66,22 +68,16 @@ export default function Popup() {
     //   RENDER
     // #################################################
 
-    console.log(pages);
-
     return (
-        <div className="Popup">
+        <div className={cn("Popup", { opaque: pages.length })}>
             {transitions(({ transform }, { pageId, type }, _, i) => {
                 return (
                     <animated.div
-                        className={cs("page", { visible: i === currentPageIndex })}
-                        style={{
-                            transform,
-                            backgroundColor: `rgb(${50 * i}, ${50 * i},255)`,
-                            zIndex: 100 + i,
-                        }}
+                        className={cn("page", { visible: i === currentPageIndex })}
+                        style={{ transform, zIndex: 100 + i }}
                         key={`${pageId}_${i}`}
                     >
-                        <p onClick={() => emit("onNewPage", { pageId: `${i + 1}`, type: "book" })}>{pageId}</p>
+                        {type === "author" ? <Author id={pageId} /> : <Book id={pageId} />}
                     </animated.div>
                 );
             })}

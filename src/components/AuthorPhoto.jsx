@@ -4,11 +4,13 @@ import SVG from "react-inlinesvg";
 import cn from "classnames";
 
 import { Data } from "../contexts/Data";
+import { Events } from "../contexts/Events";
 
 import AuthorIcon from "../resources/icons/author.svg";
 
 export default function AuthorPhoto({ authorId, coverHeight, last }) {
     const { authors } = useContext(Data);
+    const { emit } = useContext(Events);
 
     const authorInfo = authors.current[authorId];
 
@@ -31,7 +33,11 @@ export default function AuthorPhoto({ authorId, coverHeight, last }) {
     };
 
     return authorInfo && "name" in authorInfo ? (
-        <div className={cn("AuthorPhoto", "neoDiv", { last })} style={style}>
+        <div
+            className={cn("AuthorPhoto", "neoDiv", { last })}
+            style={style}
+            onClick={() => emit("onNewPage", { pageId: authorId, type: "author" })}
+        >
             <div className="coverContainer">
                 {authorInfo && authorInfo.photos && authorInfo.photos.length ? (
                     <img src={authorInfo.photos[0]} alt="" className="photo neoDiv" style={photoStyle} />

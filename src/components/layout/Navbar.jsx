@@ -45,7 +45,7 @@ export default function Navbar({ setPage, currentPage }) {
         currentPage.current = newIndex;
         updateSelected(newIndex);
         setPage(newIndex);
-    }, 300);
+    }, 400);
 
     // #################################################
     //   BACK BUTTON

@@ -4,11 +4,13 @@ import SVG from "react-inlinesvg";
 import cn from "classnames";
 
 import { Data } from "../contexts/Data";
+import { Events } from "../contexts/Events";
 
 import Logo from "../resources/icons/logo.svg";
 
 export default function BookCover({ bookId, coverHeight, last, forceShow }) {
     const { books, authors } = useContext(Data);
+    const { emit } = useContext(Events);
 
     const bookInfo = books.current[bookId];
 
@@ -25,7 +27,11 @@ export default function BookCover({ bookId, coverHeight, last, forceShow }) {
         bookInfo && "authors" in bookInfo && bookInfo.authors.length ? authors.current[bookInfo.authors[0]] : null;
 
     return forceShow || (bookInfo && "title" in bookInfo && authorInfo && "name" in authorInfo) ? (
-        <div className={cn("BookCover", "neoDiv", { last })} style={style}>
+        <div
+            className={cn("BookCover", "neoDiv", { last })}
+            style={style}
+            onClick={() => emit("onNewPage", { pageId: bookId, type: "book" })}
+        >
             {bookInfo && bookInfo.covers && bookInfo.covers.length ? (
                 <img src={bookInfo.covers[0]} alt="" className="cover" style={style} />
             ) : (
