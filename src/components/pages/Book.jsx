@@ -27,6 +27,13 @@ const MONTHS = [
     "December",
 ];
 
+const STATUSES = {
+    finished: "finished",
+    wantToRead: "on read list",
+    reading: "reading",
+    addToLibrary: "add to library",
+};
+
 export default function Book({ id }) {
     const { books, authors, getBookStatus } = useContext(Data);
     const { emit } = useContext(Events);
@@ -72,7 +79,11 @@ export default function Book({ id }) {
 
     const correctStatus = status || "addToLibrary";
     const correctDescription =
-        typeof description === "string" ? description : "value" in description ? description.value : null;
+        typeof description === "string"
+            ? description
+            : description && "value" in description
+            ? description.value
+            : null;
 
     let bookLinks = [];
     if (amazonId)
@@ -107,13 +118,15 @@ export default function Book({ id }) {
                 {covers && covers.length ? (
                     <img src={covers[0]} alt="" className="cover neoDiv" />
                 ) : (
-                    <SVG className="noCover neoDiv" src={Logo} />
+                    <div className="noCover neoDiv">
+                        <SVG className="icon" src={Logo} />
+                    </div>
                 )}
 
-                {publishDate && (
+                {(publishDate || numPages) && (
                     <div className="details">
-                        <span>{`published on ${publishDate}`}</span>
-                        <span>{`${numPages} pages`}</span>
+                        {publishDate && <span>{`published on ${publishDate}`}</span>}
+                        {numPages && <span>{`${numPages} pages`}</span>}
                     </div>
                 )}
 
@@ -127,7 +140,7 @@ export default function Book({ id }) {
                     <p className="author">unknown author</p>
                 )}
 
-                {correctStatus && <div className="status neoButton">{correctStatus}</div>}
+                {correctStatus && <div className="status neoButton">{STATUSES[correctStatus]}</div>}
 
                 {status === "finished" && <Score score={score} bookId={id} />}
 

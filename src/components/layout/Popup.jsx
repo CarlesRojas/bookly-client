@@ -1,6 +1,7 @@
 import { useContext, useEffect, useCallback, useState } from "react";
 import cn from "classnames";
 import { useTransition, animated } from "react-spring";
+import useCssOneTimeAnimation from "../../hooks/useCssOneTimeAnimation";
 
 import { Events } from "../../contexts/Events";
 import Author from "../pages/Author";
@@ -11,6 +12,12 @@ export default function Popup() {
 
     const [pages, setPages] = useState([]);
     const [currentPageIndex, setCurrentPageIndex] = useState(-1);
+
+    // #################################################
+    //   OPAQUE TRANSITION
+    // #################################################
+
+    const [delaying, trigger] = useCssOneTimeAnimation(400);
 
     // #################################################
     //   TRANSITIONS
@@ -38,13 +45,15 @@ export default function Popup() {
     );
 
     const handleBackButtonClicked = useCallback(() => {
+        if (pages.length === 1) trigger();
+
         setPages((prev) => {
             const copy = [...prev];
             copy.pop();
             return copy;
         });
         setCurrentPageIndex((prev) => --prev);
-    }, []);
+    }, [pages, trigger]);
 
     useEffect(() => {
         if (currentPageIndex === -1) emit("onShowBackButton", false);
@@ -69,7 +78,7 @@ export default function Popup() {
     // #################################################
 
     return (
-        <div className={cn("Popup", { opaque: pages.length })}>
+        <div className={cn("Popup", { opaque: pages.length || delaying })}>
             {transitions(({ transform }, { pageId, type }, _, i) => {
                 return (
                     <animated.div

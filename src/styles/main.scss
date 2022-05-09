@@ -216,6 +216,7 @@
 
     &.opaque {
         background-color: $background;
+        pointer-events: all;
     }
 
     .page {
@@ -348,8 +349,17 @@
     }
 
     .noCover {
-        padding: 27% 14%;
-        background-color: rgb(231, 203, 255);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        max-width: 13rem;
+
+        .icon {
+            height: 4rem;
+            max-height: 4rem;
+            min-height: 4rem;
+        }
     }
 
     .details {
@@ -429,6 +439,8 @@
         font-weight: 500;
         opacity: 0.8;
         margin-bottom: $marginBot;
+        width: 100%;
+        max-width: 50rem;
 
         p {
             margin-bottom: $marginBot * 0.5;
@@ -447,7 +459,8 @@
     .links {
         position: relative;
         width: 100%;
-        max-width: 50rem;
+        min-width: 100%;
+        max-width: 100%;
         display: flex;
         flex-wrap: wrap;
 
@@ -457,9 +470,9 @@
         .link {
             align-self: center;
             position: relative;
-            max-width: 10rem;
-            max-width: 10rem;
-            min-width: 10rem;
+            max-width: 8rem;
+            max-width: 8rem;
+            min-width: 8rem;
             padding: $marginBot $marginBot * 0.3;
             margin: 0 $marginBot * 0.5 $marginBot $marginBot * 0.5;
 
@@ -488,7 +501,7 @@
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
-                    font-size: 0.8rem;
+                    font-size: 0.75rem;
                     font-weight: 600;
                     opacity: 0.8;
                 }
