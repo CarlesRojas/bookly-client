@@ -15,6 +15,10 @@ const STATUSES = {
 export default function Status({ bookId, status }) {
     const { changeBookStatus } = useContext(API);
 
+    // #################################################
+    //   EXPAND
+    // #################################################
+
     const [expanded, setExpanded] = useState(false);
 
     const handleButtonClicked = () => {
@@ -30,12 +34,20 @@ export default function Status({ bookId, status }) {
         setExpanded(false);
     };
 
+    // #################################################
+    //   CLICK OUTSIDE
+    // #################################################
+
     const handleClickOutside = useCallback(() => {
         setExpanded(false);
     }, []);
 
     const statusRef = useRef();
     useClickOutsideRef(statusRef, handleClickOutside);
+
+    // #################################################
+    //   OPTIONS
+    // #################################################
 
     const optionsPerCurrentStatus = {
         finished: {
@@ -59,6 +71,10 @@ export default function Status({ bookId, status }) {
             finished: "finished",
         },
     };
+
+    // #################################################
+    //   RENDER
+    // #################################################
 
     return (
         <div className={cn("Status", "neoPopup", { expanded })} onClick={handleButtonClicked} ref={statusRef}>

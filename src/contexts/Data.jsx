@@ -81,6 +81,22 @@ const DataProvider = (props) => {
         }
     };
 
+    // Call only when the api to change the finished date has returned without erros
+    const changeUserBookFinishDate = (bookId, updatedBookInfo) => {
+        for (const i in finishedBooks) {
+            const { bookId: id } = finishedBooks[i];
+
+            if (bookId === id) {
+                setFinishedBooks((prev) => {
+                    const copy = [...prev];
+                    copy[i] = { ...updatedBookInfo };
+                    return copy;
+                });
+                return;
+            }
+        }
+    };
+
     const getBookStatus = (id) => {
         for (const bookInfo of finishedBooks) {
             if (id === bookInfo.bookId) return { ...bookInfo };
@@ -207,6 +223,7 @@ const DataProvider = (props) => {
                 readingBooks,
                 changeUserBookStatus,
                 changeUserBookScore,
+                changeUserBookFinishDate,
                 getBookStatus,
 
                 // SEARCH

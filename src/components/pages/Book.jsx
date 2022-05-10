@@ -14,21 +14,7 @@ import LibrarythingIcon from "../../resources/icons/librarything.svg";
 import LinkIcon from "../../resources/icons/link.svg";
 import Score from "../Score";
 import Status from "../Status";
-
-const MONTHS = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-];
+import FinishedOn from "../FinishedOn";
 
 export default function Book({ id }) {
     const { books, authors, getBookStatus } = useContext(Data);
@@ -155,12 +141,7 @@ export default function Book({ id }) {
                 {status === "finished" && <Score score={score} bookId={id} />}
 
                 {status === "finished" && yearFinished && (
-                    <div className="finishedOn neoButton">
-                        <p className="label">finished on</p>
-                        <p className="date">{`${
-                            monthFinished >= 0 && monthFinished <= 11 ? MONTHS[monthFinished] : ""
-                        } ${yearFinished}`}</p>
-                    </div>
+                    <FinishedOn bookId={id} monthFinished={monthFinished} yearFinished={yearFinished} />
                 )}
 
                 {correctDescription && (

@@ -22,6 +22,7 @@ const APIProvider = (props) => {
         authors,
         changeUserBookStatus,
         changeUserBookScore,
+        changeUserBookFinishDate,
         filterDuplicateAuthors,
         filterDuplicateBooks,
     } = useContext(Data);
@@ -352,6 +353,9 @@ const APIProvider = (props) => {
             });
 
             const response = await rawResponse.json();
+
+            if ("error" in response) return false;
+            else changeUserBookFinishDate(bookId, response);
 
             return response;
         } catch (error) {

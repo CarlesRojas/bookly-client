@@ -438,38 +438,14 @@
         text-align: center;
     }
 
-    .finishedOn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 3rem;
-        max-height: 3rem;
-        min-height: 3rem;
-        margin: $marginBot 0;
-        padding: 0 1.6rem;
-        text-align: center;
-
-        .label {
-            opacity: 0.5;
-            font-size: 0.85rem;
-        }
-
-        .date {
-            opacity: 0.8;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-    }
-
     .description {
         width: 100%;
         max-width: 50rem;
         opacity: 0.8;
         margin-bottom: $marginBot;
         font-size: 0.9rem;
-        line-height: 1.3rem;
         font-weight: 500;
+        line-height: 1.3rem;
 
         p {
             margin-bottom: $marginBot * 0.5;
@@ -642,6 +618,159 @@
         &.visible {
             max-height: 3rem;
             opacity: 0.7;
+        }
+    }
+}
+
+.FinishedOn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: max-height 0.2s ease-in-out;
+    height: 17rem;
+    max-height: 3rem;
+    width: 85%;
+    max-width: 15rem;
+    margin: $marginBot 0;
+    padding: 0 1.6rem;
+    text-align: center;
+
+    &.expanded {
+        max-height: 17rem;
+    }
+
+    .main {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 3rem;
+
+        .label {
+            opacity: 0.5;
+            font-size: 0.85rem;
+        }
+
+        .date {
+            opacity: 0.8;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+    }
+
+    .selector {
+        transition: opacity 0.2s ease-in-out, max-height 0.2s ease-in-out;
+        height: 14rem;
+        max-height: 0rem;
+        width: 100%;
+        opacity: 0;
+
+        &.visible {
+            max-height: 14rem;
+            opacity: 1;
+
+            .yearSelector {
+                max-height: 3rem;
+
+                .icon {
+                    max-height: 3rem;
+                }
+
+                .year {
+                    max-height: 3rem;
+                }
+            }
+
+            .monthSelector {
+                max-height: 8rem;
+
+                .month {
+                    max-height: 2rem;
+                }
+            }
+
+            .saveButton {
+                max-height: 3rem;
+            }
+        }
+
+        .yearSelector {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: max-height 0.2s ease-in-out;
+            height: 3rem;
+            max-height: 0rem;
+            width: 100%;
+
+            .icon {
+                transition: opacity 0.2s ease-in-out, max-height 0.2s ease-in-out;
+                height: 3rem;
+                max-height: 0rem;
+                opacity: 0.8;
+                padding: 1rem;
+
+                &.disabled {
+                    pointer-events: none;
+                    opacity: 0.1;
+                }
+            }
+
+            .year {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: max-height 0.2s ease-in-out;
+                height: 3rem;
+                max-height: 0rem;
+                color: $purple;
+                opacity: 0.8;
+                font-size: 1rem;
+                font-weight: 600;
+            }
+        }
+
+        .monthSelector {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            transition: max-height 0.2s ease-in-out;
+            height: 8rem;
+            max-height: 0rem;
+
+            .month {
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: max-height 0.2s ease-in-out;
+                height: 2rem;
+                max-height: 0rem;
+                opacity: 0.8;
+                font-size: 1rem;
+                font-weight: 600;
+
+                &.selected {
+                    color: $purple;
+                }
+            }
+        }
+
+        .saveButton {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: max-height 0.2s ease-in-out;
+            height: 3rem;
+            max-height: 0rem;
+            width: 100%;
+            color: $purple;
+            font-weight: 600;
         }
     }
 }
