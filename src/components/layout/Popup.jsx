@@ -55,6 +55,13 @@ export default function Popup() {
         setCurrentPageIndex((prev) => --prev);
     }, [pages, trigger]);
 
+    const handleCloseAllButtonClicked = useCallback(() => {
+        trigger();
+
+        setPages([]);
+        setCurrentPageIndex(-1);
+    }, [trigger]);
+
     useEffect(() => {
         if (currentPageIndex === -1) emit("onShowBackButton", false);
     }, [currentPageIndex, emit]);
@@ -66,12 +73,14 @@ export default function Popup() {
     useEffect(() => {
         sub("onNewPage", handleNewPage);
         sub("onBackButtonClicked", handleBackButtonClicked);
+        sub("onCloseAllButtonClicked", handleCloseAllButtonClicked);
 
         return () => {
             unsub("onNewPage", handleNewPage);
             unsub("onBackButtonClicked", handleBackButtonClicked);
+            unsub("onCloseAllButtonClicked", handleCloseAllButtonClicked);
         };
-    }, [handleNewPage, handleBackButtonClicked, sub, unsub]);
+    }, [handleNewPage, handleBackButtonClicked, handleCloseAllButtonClicked, sub, unsub]);
 
     // #################################################
     //   RENDER

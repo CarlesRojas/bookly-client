@@ -10,6 +10,7 @@ import SearchIcon from "../../resources/icons/search.svg";
 import StatsIcon from "../../resources/icons/stats.svg";
 import SettingsIcon from "../../resources/icons/settings.svg";
 import BackIcon from "../../resources/icons/back.svg";
+import CloseIcon from "../../resources/icons/close.svg";
 
 const PAGES = [
     {
@@ -85,6 +86,12 @@ export default function Navbar({ setPage, currentPage }) {
                     />
                 ))}
             </div>
+
+            <div className="close neoButton" onClick={() => emit("onCloseAllButtonClicked")}>
+                <SVG className="icon" src={CloseIcon} />
+                <p>close all</p>
+            </div>
+
             <div className="back neoButton" onClick={() => emit("onBackButtonClicked")}>
                 <SVG className="icon" src={BackIcon} />
                 <p>back</p>
