@@ -1,6 +1,8 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
+import ShowMoreText from "react-show-more-text";
 import SVG from "react-inlinesvg";
 import MarkdownView from "react-showdown";
+import useResize from "../../hooks/useResize";
 
 import { Data } from "../../contexts/Data";
 import { Events } from "../../contexts/Events";
@@ -53,6 +55,20 @@ export default function Book({ id }) {
     useEffect(() => {
         document.querySelectorAll("div #description a").forEach((item) => (item.target = "_blank"));
     });
+
+    // #################################################
+    //   LINK CONTAINER
+    // #################################################
+
+    const linksContainerRef = useRef();
+    const [linksContainerBox, setLinksContainerBox] = useState({ width: 0 });
+
+    const handleResize = () => {
+        const box = linksContainerRef.current ? linksContainerRef.current.getBoundingClientRect() : { width: 0 };
+
+        setLinksContainerBox(box);
+    };
+    useResize(handleResize, true);
 
     // #################################################
     //   BOOK DATA
@@ -165,9 +181,18 @@ export default function Book({ id }) {
                 <div className="links">
                     {bookLinks.map(({ title, url, icon }, i) => (
                         <div className="link neoDiv" onClick={() => window.open(url, "_blank")} key={i}>
-                            <div className="linkInfoContainer">
+                            <div className="linkInfoContainer" ref={linksContainerRef}>
                                 <SVG className="linkIcon" src={icon} />
-                                <p className="linkName">{title}</p>
+                                <ShowMoreText
+                                    lines={2}
+                                    className="linkName"
+                                    anchorClass="anchor"
+                                    expanded={false}
+                                    width={linksContainerBox.width}
+                                    truncatedEndingComponent={"..."}
+                                >
+                                    <p>{title}</p>
+                                </ShowMoreText>
                             </div>
                         </div>
                     ))}

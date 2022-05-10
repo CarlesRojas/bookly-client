@@ -52,6 +52,7 @@ const APIProvider = (props) => {
             if ("error" in response) return response;
             return response;
         } catch (error) {
+            console.log(error);
             return { error: `Unknown registration error` };
         }
     };
@@ -86,6 +87,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
+            console.log(error);
             return { error: "Unknown login error" };
         }
     };
@@ -109,6 +111,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
+            console.log(error);
             return { error: `Test token error: ${error}` };
         }
     };
@@ -138,6 +141,7 @@ const APIProvider = (props) => {
             return response;
         } catch (error) {
             clearInfo(APP_NAME);
+            console.log(error);
             return { error: `Get user info error: ${error}` };
         }
     };
@@ -210,6 +214,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
+            console.log(error);
             return { error: `Change email error: ${error}` };
         }
     };
@@ -238,6 +243,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
+            console.log(error);
             return { error: `Change password error: ${error}` };
         }
     };
@@ -264,6 +270,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
+            console.log(error);
             return { error: `Delete account error: ${error}` };
         }
     };
@@ -297,6 +304,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
+            console.log(error);
             return { error: "Unknown error" };
         }
     };
@@ -323,6 +331,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
+            console.log(error);
             return { error: "Unknown error" };
         }
     };
@@ -346,6 +355,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
+            console.log(error);
             return { error: "Unknown error" };
         }
     };
@@ -368,6 +378,7 @@ const APIProvider = (props) => {
 
             return response;
         } catch (error) {
+            console.log(error);
             return { error: "Unknown error" };
         }
     };
@@ -414,6 +425,7 @@ const APIProvider = (props) => {
 
             return parsedResponse;
         } catch (error) {
+            console.log(error);
             return { error: `Get book info error: ${error}` };
         }
     };
@@ -451,22 +463,51 @@ const APIProvider = (props) => {
 
             return parsedResponse;
         } catch (error) {
+            console.log(error);
             return { error: `Get author info error: ${error}` };
         }
     };
 
     const getAuthorWorks = async (authorId) => {
+        if (authorId in authors.current && "works" in authors.current[authorId] && authors.current[authorId].works)
+            return authors.current[authorId].works;
+
         try {
             const rawResponse = await fetch(`${OPEN_LIB_API_URL}/search.json?author=${authorId}&language=eng`);
 
             const response = await rawResponse.json();
 
-            const parsedResponse = response.docs
+            let parsedResponse = response.docs
                 .filter(({ type }) => type === "work")
                 .map(({ key }) => key.replace("/works/", ""));
 
+            parsedResponse = parsedResponse.slice(0, 30);
+
+            await Promise.all(parsedResponse.map(async (bookId) => await searchBooks(bookId, true)));
+
+            // Sort by cover
+            parsedResponse.sort((first, second) => {
+                if (!(first in books.current) || books.current[first] === null) return 1;
+                if (!(second in books.current) || books.current[second] === null) return -1;
+
+                const result =
+                    (!books.current[first].covers && !books.current[second].covers) ||
+                    (books.current[first].covers && books.current[second].covers)
+                        ? 0
+                        : books.current[first].covers && !books.current[second].covers
+                        ? -1
+                        : 1;
+
+                return result;
+            });
+
+            // Update author
+            authors.current[authorId].works = parsedResponse;
+            setInfo(`${APP_NAME}_authors`, { ...authors.current });
+
             return parsedResponse;
         } catch (error) {
+            console.log(error);
             return { error: `Get author info error: ${error}` };
         }
     };
@@ -523,6 +564,7 @@ const APIProvider = (props) => {
             parsedWorks = filterDuplicateBooks(parsedWorks);
             parsedAuthors = filterDuplicateAuthors(parsedAuthors);
 
+            // Sort by cover
             parsedWorks.sort((first, second) => {
                 if (!(first in books.current) || books.current[first] === null) return 1;
                 if (!(second in books.current) || books.current[second] === null) return -1;
@@ -538,6 +580,7 @@ const APIProvider = (props) => {
                 return result;
             });
 
+            // Sort by photo
             parsedAuthors.sort((first, second) => {
                 if (!(first in authors.current) || authors.current[first] === null) return 1;
                 if (!(second in authors.current) || authors.current[second] === null) return -1;

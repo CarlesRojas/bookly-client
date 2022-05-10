@@ -7,6 +7,10 @@ import { Data } from "../../contexts/Data";
 export default function Home() {
     const { finishedBooks, wantToReadBooks, readingBooks } = useContext(Data);
 
+    // #################################################
+    //   COVER HEIGHT
+    // #################################################
+
     const containerRef = useRef();
     const [coverHeight, setCoverHeight] = useState(0);
 
@@ -16,6 +20,10 @@ export default function Home() {
         setCoverHeight((box.height - (3.6 * 3 + 2) * 16) / 3);
     };
     useResize(handleResize, true);
+
+    // #################################################
+    //   RENDER
+    // #################################################
 
     return (
         <div className="Home" ref={containerRef}>
