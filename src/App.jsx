@@ -2,6 +2,8 @@ import { useContext, useEffect, useState, useCallback, useRef } from "react";
 import Auth from "./components/auth/Auth";
 import DesktopLayout from "./components/layout/DesktopLayout";
 import MobileLayout from "./components/layout/MobileLayout";
+import Loading from "./components/layout/Loading";
+import useCssOneTimeAnimation from "./hooks/useCssOneTimeAnimation";
 
 import { API } from "./contexts/API";
 import { MediaQuery } from "./contexts/MediaQuery";
@@ -17,6 +19,12 @@ export default function App() {
     const { set } = useContext(GlobalState);
     const { APP_NAME, setUserBooks, books, authors } = useContext(Data);
     const { getInfo } = useContext(Utils);
+
+    // #################################################
+    //   LOADING FOR AT LEAST ONE SECOND
+    // #################################################
+
+    const [loading, triggerLoading] = useCssOneTimeAnimation(750, true);
 
     // #################################################
     //   LOGIN
@@ -42,6 +50,7 @@ export default function App() {
         const loadData = async () => {
             if (loggedIn && !loadedDone.current) {
                 loadedDone.current = true;
+                triggerLoading();
 
                 // Load previous session books and authors from local storage
                 books.current = getInfo(`${APP_NAME}_books`) || [];
@@ -58,7 +67,7 @@ export default function App() {
         };
 
         loadData();
-    }, [loggedIn, dataLoaded, getAllUserBooks, setUserBooks, set, APP_NAME, authors, books, getInfo]);
+    }, [loggedIn, dataLoaded, getAllUserBooks, setUserBooks, set, APP_NAME, authors, books, getInfo, triggerLoading]);
 
     // #################################################
     //   EVENTS
@@ -78,9 +87,13 @@ export default function App() {
         };
     }, [handleLogout, sub, unsub]);
 
+    // #################################################
+    //   RENDER
+    // #################################################
+
     if (loggedIn === null) return null;
     else if (!loggedIn) return <Auth setLoggedIn={setLoggedIn} />;
-    else if (loggedIn && dataLoaded)
+    else if (loggedIn && dataLoaded && !loading)
         return isMobile || isMobileSize || (isTablet && !isLandscape) ? <MobileLayout /> : <DesktopLayout />;
-    else return null;
+    else return <Loading />;
 }

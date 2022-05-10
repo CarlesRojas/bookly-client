@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 
-export default function useCssOneTimeAnimation(duration) {
-    const [animating, setAnimating] = useState(false);
+export default function useCssOneTimeAnimation(duration, defaultValue = false) {
+    const [animating, setAnimating] = useState(defaultValue);
 
     const timeoutRef = useRef();
 
