@@ -13,6 +13,7 @@ import GoodreadsIcon from "../../resources/icons/goodreads.svg";
 import LibrarythingIcon from "../../resources/icons/librarything.svg";
 import LinkIcon from "../../resources/icons/link.svg";
 import Score from "../Score";
+import Status from "../Status";
 
 const MONTHS = [
     "January",
@@ -28,13 +29,6 @@ const MONTHS = [
     "November",
     "December",
 ];
-
-const STATUSES = {
-    finished: "finished",
-    wantToRead: "on read list",
-    reading: "reading",
-    addToLibrary: "add to library",
-};
 
 export default function Book({ id }) {
     const { books, authors, getBookStatus } = useContext(Data);
@@ -156,7 +150,7 @@ export default function Book({ id }) {
                     <p className="author">unknown author</p>
                 )}
 
-                {correctStatus && <div className="status neoButton">{STATUSES[correctStatus]}</div>}
+                {correctStatus && <Status bookId={id} status={correctStatus} />}
 
                 {status === "finished" && <Score score={score} bookId={id} />}
 

@@ -22,6 +22,10 @@ const DataProvider = (props) => {
     //   USER BOOKS
     // #################################################
 
+    const [finishedBooks, setFinishedBooks] = useState([]);
+    const [wantToReadBooks, setWantToReadBooks] = useState([]);
+    const [readingBooks, setReadingBooks] = useState([]);
+
     const setUserBooks = (userBooks) => {
         const finished = [];
         const wantToRead = [];
@@ -45,10 +49,11 @@ const DataProvider = (props) => {
         const wantToRead = [...wantToReadBooks];
         const reading = [...readingBooks];
 
-        let currArray = oldStatus === "finished" ? finished : oldStatus === "wantToRead" ? wantToRead : reading;
-        let index = currArray.findIndex(({ bookId: id }) => id === bookId);
-        currArray.splice(index, 1);
-        console.log(index);
+        if (oldStatus !== "addToLibrary") {
+            let currArray = oldStatus === "finished" ? finished : oldStatus === "wantToRead" ? wantToRead : reading;
+            let index = currArray.findIndex(({ bookId: id }) => id === bookId);
+            currArray.splice(index, 1);
+        }
 
         if (newStatus !== "remove") {
             let newArray = newStatus === "finished" ? finished : newStatus === "wantToRead" ? wantToRead : reading;
@@ -75,10 +80,6 @@ const DataProvider = (props) => {
             }
         }
     };
-
-    const [finishedBooks, setFinishedBooks] = useState([]);
-    const [wantToReadBooks, setWantToReadBooks] = useState([]);
-    const [readingBooks, setReadingBooks] = useState([]);
 
     const getBookStatus = (id) => {
         for (const bookInfo of finishedBooks) {

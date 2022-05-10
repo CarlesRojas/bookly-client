@@ -49,10 +49,10 @@
             background: linear-gradient(to right, #c585d8 0%, #9c67fb 100%);
             background-clip: text;
             color: $purple;
+            margin-bottom: 2rem;
             font-size: 1.2rem;
             font-weight: 700;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 2rem;
         }
     }
 
@@ -214,27 +214,27 @@
 }
 
 .Popup {
-    transition: background-color 0.3s ease-out;
+    pointer-events: none;
     position: absolute;
+    transition: background-color 0.3s ease-out;
     height: calc(100% - #{$navBarheight});
     width: 100%;
     top: 0;
     left: 0;
-    pointer-events: none;
     background-color: transparent;
 
     &.opaque {
-        background-color: $background;
         pointer-events: all;
+        background-color: $background;
     }
 
     .page {
+        pointer-events: none;
         position: absolute;
         height: 100%;
         width: 100%;
         top: 0;
         left: 0;
-        pointer-events: none;
 
         &.visible {
             pointer-events: all;
@@ -255,34 +255,34 @@
     width: 100%;
 
     .section {
-        font-size: 1.1rem;
-        margin: 2rem $margin 0;
         opacity: 0.9;
+        margin: 2rem $margin 0;
+        font-size: 1.1rem;
         font-weight: 500;
     }
 
     .container {
-        overflow-x: auto;
-        overflow-y: hidden;
-        overscroll-behavior: contain;
         position: relative;
-        width: fit-content;
-        max-width: 100%;
         display: flex;
         align-items: center;
+        width: fit-content;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
         padding: 0.5rem 0;
+        overscroll-behavior: contain;
     }
 }
 
 .Search {
     .results {
-        transition: opacity 0.2s ease-in-out;
+        pointer-events: none;
         position: relative;
         display: flex;
         flex-direction: column;
+        transition: opacity 0.2s ease-in-out;
         width: 100%;
         opacity: 0;
-        pointer-events: none;
 
         &.visible {
             pointer-events: all;
@@ -292,10 +292,10 @@
 
     .inputsContainer {
         display: flex;
+        flex: 1;
         align-items: center;
         justify-content: center;
         width: 100%;
-        flex: 1;
 
         .form {
             max-width: 25rem;
@@ -331,7 +331,6 @@
     height: 100%;
     width: 100%;
     padding: $margin;
-    $marginBot: 1.5rem;
 
     .mainContent {
         position: relative;
@@ -341,17 +340,17 @@
         height: 100%;
         width: 100%;
         overflow-y: auto;
-        padding: 1.5rem;
+        padding: 1rem;
     }
 
     .cover,
     .noCover {
+        pointer-events: none;
+        user-select: none;
         position: relative;
         height: 40%;
-        min-height: 40%;
         max-height: 40%;
-        user-select: none;
-        pointer-events: none;
+        min-height: 40%;
     }
 
     .noCover {
@@ -370,12 +369,12 @@
 
     .photo,
     .noPhoto {
+        pointer-events: none;
+        user-select: none;
         position: relative;
         height: 35%;
-        min-height: 35%;
         max-height: 35%;
-        user-select: none;
-        pointer-events: none;
+        min-height: 35%;
     }
 
     .noPhoto {
@@ -393,15 +392,15 @@
     }
 
     .details {
-        width: 100%;
-        text-align: center;
-        font-size: 0.85rem;
-        opacity: 0.5;
-        margin-bottom: $marginBot;
-        margin: $marginBot * 0.5 0 $marginBot;
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
+        opacity: 0.5;
+        margin: $marginBot * 0.5 0 $marginBot;
+        margin-bottom: $marginBot;
+        font-size: 0.85rem;
+        text-align: center;
 
         span {
             &:first-child {
@@ -412,10 +411,10 @@
 
     .title {
         width: 100%;
-        text-align: center;
+        margin-bottom: $marginBot * 0.2;
         font-size: 1.3rem;
         font-weight: 600;
-        margin-bottom: $marginBot * 0.2;
+        text-align: center;
 
         &.name {
             margin-bottom: $marginBot;
@@ -423,28 +422,12 @@
     }
 
     .author {
-        width: 100%;
-        text-align: center;
-        font-size: 1rem;
-        font-weight: 500;
+        max-width: 100%;
         opacity: 0.5;
         margin-bottom: $marginBot;
-    }
-
-    .status {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 3rem;
-        max-height: 3rem;
-        min-height: 3rem;
-        width: 85%;
-        max-width: 15rem;
-        color: $purple;
-        padding: 0 1.6rem;
-        font-weight: 600;
-        margin-bottom: $marginBot;
+        font-size: 1rem;
+        font-weight: 500;
+        text-align: center;
     }
 
     .finishedOn {
@@ -452,32 +435,32 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin: $marginBot 0;
-        text-align: center;
         height: 3rem;
         max-height: 3rem;
         min-height: 3rem;
+        margin: $marginBot 0;
         padding: 0 1.6rem;
+        text-align: center;
 
         .label {
-            font-size: 0.85rem;
             opacity: 0.5;
+            font-size: 0.85rem;
         }
 
         .date {
+            opacity: 0.8;
             font-size: 1rem;
             font-weight: 600;
-            opacity: 0.8;
         }
     }
 
     .description {
-        font-size: 0.9rem;
-        font-weight: 500;
-        opacity: 0.8;
-        margin-bottom: $marginBot;
         width: 100%;
         max-width: 50rem;
+        opacity: 0.8;
+        margin-bottom: $marginBot;
+        font-size: 0.9rem;
+        font-weight: 500;
 
         p {
             margin-bottom: $marginBot * 0.5;
@@ -494,21 +477,21 @@
     }
 
     .container {
-        overflow-x: auto;
-        overflow-y: hidden;
-        overscroll-behavior: contain;
         position: relative;
-        width: fit-content;
-        max-width: 100%;
         display: flex;
         align-items: center;
+        width: fit-content;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
         margin-bottom: $marginBot;
+        overscroll-behavior: contain;
 
         &.center {
-            width: 100%;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
+            width: 100%;
 
             .loading {
                 height: 2rem;
@@ -519,48 +502,47 @@
             }
 
             .loadingWorks {
+                opacity: 0.8;
                 font-size: 1rem;
                 font-weight: 600;
-                opacity: 0.8;
             }
         }
     }
 
     .links {
         position: relative;
-        width: 100%;
-        min-width: 100%;
-        max-width: 100%;
         display: flex;
         flex-wrap: wrap;
-
         align-items: center;
         justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
 
         .link {
-            align-self: center;
             position: relative;
+            align-self: center;
             max-width: 8rem;
             max-width: 8rem;
             min-width: 8rem;
-            padding: $marginBot $marginBot * 0.3;
             margin: 0 $marginBot * 0.5 $marginBot $marginBot * 0.5;
+            padding: $marginBot * 0.5 $marginBot * 0.3;
 
             .linkInfoContainer {
                 position: relative;
-                width: 100%;
-                max-width: 100%;
-                min-width: 100%;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
+                width: 100%;
+                max-width: 100%;
+                min-width: 100%;
 
                 .linkIcon {
                     width: 50%;
-                    max-width: 2rem;
-                    margin-bottom: $marginBot * 0.5;
+                    max-width: 1.5rem;
                     color: $purple;
+                    margin-bottom: $marginBot * 0.5;
                 }
 
                 .linkNameContainer {
@@ -571,16 +553,16 @@
                 }
 
                 .linkName {
-                    text-align: center;
                     width: 100%;
                     max-width: 100%;
                     min-width: 100%;
-                    white-space: nowrap;
                     overflow: hidden;
-                    text-overflow: ellipsis;
+                    opacity: 0.8;
                     font-size: 0.75rem;
                     font-weight: 600;
-                    opacity: 0.8;
+                    text-align: center;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
 
                     .anchor {
                         display: none;
@@ -593,22 +575,67 @@
 
 .Score {
     position: relative;
-    width: 85%;
-    max-width: 15rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    width: 85%;
+    max-width: 15rem;
     touch-action: none;
 
     .star {
-        transition: opacity 0.2s ease-in-out;
+        pointer-events: none;
+        transition: opacity 0.1s ease-in-out;
         width: 100%;
         color: $purple;
         opacity: 0.2;
         padding: 20%;
-        pointer-events: none;
 
         &.active {
             opacity: 1;
+        }
+    }
+}
+
+.Status {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: max-height 0.2s ease-in-out;
+    height: 12rem;
+    max-height: 3rem;
+    width: 85%;
+    max-width: 15rem;
+    margin-bottom: $marginBot;
+    padding: 0 1.6rem;
+    font-weight: 600;
+
+    &.expanded {
+        max-height: 12rem;
+    }
+
+    .newOption,
+    .option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 3rem;
+        max-height: 3rem;
+        width: 100%;
+        color: $purple;
+        opacity: 1;
+    }
+
+    .newOption {
+        transition: opacity 0.2s ease-in-out, max-height 0.2s ease-in-out;
+        height: 3rem;
+        max-height: 0rem;
+        color: $text;
+        opacity: 0;
+
+        &.visible {
+            max-height: 3rem;
+            opacity: 0.7;
         }
     }
 }
@@ -636,8 +663,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 100%;
         height: 100%;
+        width: 100%;
 
         .icon {
             height: 20%;
@@ -651,10 +678,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            margin-bottom: 0.2rem;
             font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 0.2rem;
+            text-align: center;
         }
 
         .authorContent {
@@ -662,10 +689,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            opacity: 0.5;
             font-size: 0.7rem;
             font-weight: 500;
-            opacity: 0.5;
+            text-align: center;
         }
 
         .anchor {
@@ -688,8 +715,8 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        width: 100%;
         height: 100%;
+        width: 100%;
 
         .photo {
             object-fit: cover;
@@ -697,21 +724,21 @@
         }
 
         .icon {
-            padding: 2rem;
-            border-radius: 0.5rem;
             color: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            padding: 2rem;
         }
 
         .content {
             display: flex;
+            flex: 1;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 100%;
-            flex: 1;
-            text-align: center;
             font-size: 0.8rem;
             font-weight: 600;
+            text-align: center;
         }
 
         .anchor {
@@ -806,4 +833,10 @@
     box-shadow: 0.25rem 0.25rem 0.35rem #bebebe inset, -0.25rem -0.25rem 0.35rem #ffffff inset;
     background-color: $background;
     border-radius: 100vw;
+}
+
+.neoPopup {
+    box-shadow: 0.25rem 0.25rem 0.35rem #bebebe, -0.25rem -0.25rem 0.35rem #ffffff;
+    background-color: $background;
+    border-radius: 1.5rem;
 }
