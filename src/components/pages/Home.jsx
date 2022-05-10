@@ -17,7 +17,7 @@ export default function Home() {
     const handleResize = () => {
         const box = containerRef.current.getBoundingClientRect();
 
-        setCoverHeight((box.height - (3.6 * 3 + 2) * 16) / 3);
+        setCoverHeight((box.height - (2.6 * 3 + 2) * 16) / 3);
     };
     useResize(handleResize, true);
 
