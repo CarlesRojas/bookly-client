@@ -89,7 +89,7 @@ export default function Author({ id }) {
                     </div>
                 )}
 
-                {birth_date && <div className="details">{birth_date && <span>{`born on ${birth_date}`}</span>}</div>}
+                <div className="details">{birth_date && <span>{`born on ${birth_date}`}</span>}</div>
 
                 <p className="title name">{name || "untitled"}</p>
 

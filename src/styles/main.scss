@@ -790,6 +790,8 @@
 
     .cover {
         object-fit: cover;
+        user-select: none;
+        pointer-events: none;
     }
 
     .noCoverContainer {
@@ -856,6 +858,8 @@
         .photo {
             object-fit: cover;
             border-radius: 0.5rem;
+            user-select: none;
+            pointer-events: none;
         }
 
         .icon {
