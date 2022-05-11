@@ -12,6 +12,29 @@ const STATUSES = {
     remove: "remove from library",
 };
 
+const OPTIONS = {
+    finished: {
+        wantToRead: "want to read",
+        reading: "reading",
+        remove: "remove from library",
+    },
+    wantToRead: {
+        finished: "finished",
+        reading: "reading",
+        remove: "remove from library",
+    },
+    reading: {
+        finished: "finished",
+        wantToRead: "want to read",
+        remove: "remove from library",
+    },
+    addToLibrary: {
+        wantToRead: "want to read",
+        reading: "reading",
+        finished: "finished",
+    },
+};
+
 export default function Status({ bookId, status }) {
     const { changeBookStatus } = useContext(API);
 
@@ -46,33 +69,6 @@ export default function Status({ bookId, status }) {
     useClickOutsideRef(statusRef, handleClickOutside);
 
     // #################################################
-    //   OPTIONS
-    // #################################################
-
-    const optionsPerCurrentStatus = {
-        finished: {
-            wantToRead: "want to read",
-            reading: "reading",
-            remove: "remove from library",
-        },
-        wantToRead: {
-            finished: "finished",
-            reading: "reading",
-            remove: "remove from library",
-        },
-        reading: {
-            finished: "finished",
-            wantToRead: "want to read",
-            remove: "remove from library",
-        },
-        addToLibrary: {
-            wantToRead: "want to read",
-            reading: "reading",
-            finished: "finished",
-        },
-    };
-
-    // #################################################
     //   RENDER
     // #################################################
 
@@ -82,13 +78,13 @@ export default function Status({ bookId, status }) {
                 {STATUSES[status]}
             </p>
 
-            {Object.keys(optionsPerCurrentStatus[status]).map((elem) => (
+            {Object.keys(OPTIONS[status]).map((elem) => (
                 <p
                     className={cn("newOption", { visible: expanded })}
                     onClick={() => handleOptionClicked(elem)}
                     key={elem}
                 >
-                    {optionsPerCurrentStatus[status][elem]}
+                    {OPTIONS[status][elem]}
                 </p>
             ))}
         </div>

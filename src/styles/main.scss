@@ -262,8 +262,10 @@
     width: 100%;
 
     .section {
+        display: flex;
+        align-items: flex-end;
         opacity: 0.9;
-        margin: 1rem $margin 0;
+        margin: 0 $margin;
         font-size: 1.1rem;
         font-weight: 500;
     }
@@ -275,9 +277,59 @@
         width: fit-content;
         max-width: 100%;
         overflow-x: auto;
-        overflow-y: hidden;
-        padding: 0.5rem 0;
+        overflow-y: visible;
         overscroll-behavior: contain;
+    }
+
+    .topSection {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-right: $margin;
+
+        .sortPopup {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: max-width 0.2s ease-in-out;
+            width: 15rem;
+            max-width: 5rem;
+            height: 85%;
+
+            &.expanded {
+                max-width: 15rem;
+            }
+
+            .sortOption,
+            .newSortOption {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 5rem;
+                max-width: 5rem;
+                height: 100%;
+                color: $purple;
+                opacity: 1;
+                font-weight: 600;
+                font-size: 0.85rem;
+            }
+
+            .newSortOption {
+                transition: opacity 0.2s ease-in-out, max-width 0.2s ease-in-out;
+                width: 5rem;
+                max-width: 0rem;
+                color: $text;
+                opacity: 0;
+                height: 100%;
+
+                &.visible {
+                    max-width: 5rem;
+                    opacity: 0.7;
+                }
+            }
+        }
     }
 }
 

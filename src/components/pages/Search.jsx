@@ -10,6 +10,10 @@ import { API } from "../../contexts/API";
 
 import LoadingIcon from "../../resources/icons/loading.svg";
 
+const PADDING = 0.5;
+const TITLE_HEIGHT = 2.5;
+const REM_PX = 16;
+
 export default function Search() {
     const { searchedBooks, setSearchedBooks, searchedAuthors, setSearchedAuthors } = useContext(Data);
     const { searchBooks } = useContext(API);
@@ -21,7 +25,7 @@ export default function Search() {
     const handleResize = () => {
         const box = containerRef.current.getBoundingClientRect();
 
-        setCoverHeight((box.height - (2.6 * 3 + 2) * 16) / 3);
+        setCoverHeight((box.height - (TITLE_HEIGHT * 2 + PADDING * 4) * REM_PX) / 3);
     };
     useResize(handleResize, true);
 
@@ -50,8 +54,13 @@ export default function Search() {
             <div
                 className={cn("results", { visible: !hideResults && (searchedAuthors.length || searchedBooks.length) })}
             >
-                <p className="section">authors</p>
-                <div className="container" style={{ height: `${coverHeight + 16}px` }}>
+                <p className="section" style={{ height: `${TITLE_HEIGHT}rem` }}>
+                    authors
+                </p>
+                <div
+                    className="container"
+                    style={{ height: `${coverHeight + PADDING * REM_PX * 2}px`, padding: `${PADDING}rem 0` }}
+                >
                     {searchedAuthors.map((authorId, i) => (
                         <AuthorPhoto
                             key={authorId}
@@ -62,8 +71,13 @@ export default function Search() {
                     ))}
                 </div>
 
-                <p className="section">books</p>
-                <div className="container" style={{ height: `${coverHeight + 16}px` }}>
+                <p className="section" style={{ height: `${TITLE_HEIGHT}rem` }}>
+                    books
+                </p>
+                <div
+                    className="container"
+                    style={{ height: `${coverHeight + PADDING * REM_PX * 2}px`, padding: `${PADDING}rem 0` }}
+                >
                     {searchedBooks.map((bookId, i) => (
                         <BookCover
                             key={bookId}

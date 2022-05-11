@@ -1,9 +1,13 @@
-import { createContext, useRef, useState } from "react";
+import { createContext, useRef, useState, useContext } from "react";
+
+import { Utils } from "./Utils";
 
 const APP_NAME = "bookly";
 
 export const Data = createContext();
 const DataProvider = (props) => {
+    const { getInfo, setInfo } = useContext(Utils);
+
     // #################################################
     //   USER INFO
     // #################################################
@@ -25,6 +29,7 @@ const DataProvider = (props) => {
     const [finishedBooks, setFinishedBooks] = useState([]);
     const [wantToReadBooks, setWantToReadBooks] = useState([]);
     const [readingBooks, setReadingBooks] = useState([]);
+    const [sort, setSort] = useState(getInfo(`${APP_NAME}_sortOption`) || "title");
 
     const setUserBooks = (userBooks) => {
         const finished = [];
@@ -38,9 +43,18 @@ const DataProvider = (props) => {
             else if (status === "reading") reading.push({ userId, bookId, status, score, monthFinished, yearFinished });
         });
 
-        setFinishedBooks(finished);
-        setWantToReadBooks(wantToRead);
-        setReadingBooks(reading);
+        const { sortedFinishedBooks, sortedWantToReadBooks, sortedReadingBooks } = sortBooks(
+            {
+                finished,
+                wantToRead,
+                reading,
+            },
+            sort
+        );
+
+        setFinishedBooks(sortedFinishedBooks);
+        setWantToReadBooks(sortedWantToReadBooks);
+        setReadingBooks(sortedReadingBooks);
     };
 
     // Call only when the api to change the status has returned without erros
@@ -60,25 +74,47 @@ const DataProvider = (props) => {
             newArray.unshift({ ...newBookData });
         }
 
-        setFinishedBooks(finished);
-        setWantToReadBooks(wantToRead);
-        setReadingBooks(reading);
+        const { sortedFinishedBooks, sortedWantToReadBooks, sortedReadingBooks } = sortBooks(
+            {
+                finished,
+                wantToRead,
+                reading,
+            },
+            sort
+        );
+
+        setFinishedBooks(sortedFinishedBooks);
+        setWantToReadBooks(sortedWantToReadBooks);
+        setReadingBooks(sortedReadingBooks);
     };
 
     // Call only when the api to change the score has returned without erros
     const changeUserBookScore = (bookId, updatedBookInfo) => {
-        for (const i in finishedBooks) {
-            const { bookId: id } = finishedBooks[i];
+        const finished = [...finishedBooks];
+        const wantToRead = [...wantToReadBooks];
+        const reading = [...readingBooks];
+
+        for (const i in finished) {
+            const { bookId: id } = finished[i];
 
             if (bookId === id) {
-                setFinishedBooks((prev) => {
-                    const copy = [...prev];
-                    copy[i] = { ...updatedBookInfo };
-                    return copy;
-                });
-                return;
+                finished[i] = { ...updatedBookInfo };
+                break;
             }
         }
+
+        const { sortedFinishedBooks, sortedWantToReadBooks, sortedReadingBooks } = sortBooks(
+            {
+                finished,
+                wantToRead,
+                reading,
+            },
+            sort
+        );
+
+        setFinishedBooks(sortedFinishedBooks);
+        setWantToReadBooks(sortedWantToReadBooks);
+        setReadingBooks(sortedReadingBooks);
     };
 
     // Call only when the api to change the finished date has returned without erros
@@ -111,6 +147,120 @@ const DataProvider = (props) => {
         }
 
         return {};
+    };
+
+    // #################################################
+    //   USER BOOKS SORT
+    // #################################################
+
+    const setSortOption = (sortOption) => {
+        if (!["title", "author", "rating"].includes(sortOption)) return;
+
+        setInfo(`${APP_NAME}_sortOption`, sortOption);
+
+        if (sort === sortOption) return;
+
+        const { sortedFinishedBooks, sortedWantToReadBooks, sortedReadingBooks } = sortBooks(
+            {
+                finished: [...finishedBooks],
+                wantToRead: [...wantToReadBooks],
+                reading: [...readingBooks],
+            },
+            sortOption
+        );
+
+        setFinishedBooks(sortedFinishedBooks);
+        setWantToReadBooks(sortedWantToReadBooks);
+        setReadingBooks(sortedReadingBooks);
+
+        setSort(sortOption);
+    };
+
+    const removeFirstArticle = (value) => {
+        const articles = ["the ", "an ", "a "];
+
+        for (const article of articles) if (value.startsWith(article)) return value.replace(article, "");
+
+        return value;
+    };
+
+    const sortBooks = ({ finished, wantToRead, reading }, sortBy) => {
+        const wantToReadCopy = [...wantToRead];
+        const readingCopy = [...reading];
+        const finishedCopy = [...finished];
+
+        finishedCopy.sort((first, second) => {
+            if (!(first.bookId in books.current) || books.current[first.bookId] === null) return 1;
+            if (!(second.bookId in books.current) || books.current[second.bookId] === null) return -1;
+
+            const firstBook = books.current[first.bookId];
+            const secondBook = books.current[second.bookId];
+
+            if (sortBy === "title" || (sortBy === "rating" && second.score === first.score))
+                return removeFirstArticle(firstBook.title.toLowerCase()).localeCompare(
+                    removeFirstArticle(secondBook.title.toLowerCase())
+                );
+            else if (sortBy === "author") {
+                if (!("authors" in firstBook) || !firstBook.authors.length) return 1;
+                if (!("authors" in secondBook) || !secondBook.authors.length) return 1;
+
+                const firstAuthor = authors.current[firstBook.authors[0]];
+                const secondAuthor = authors.current[secondBook.authors[0]];
+
+                return firstAuthor.name.localeCompare(secondAuthor.name);
+            }
+            if (sortBy === "rating") return second.score - first.score;
+            else return 0;
+        });
+
+        wantToReadCopy.sort((first, second) => {
+            if (!(first.bookId in books.current) || books.current[first.bookId] === null) return 1;
+            if (!(second.bookId in books.current) || books.current[second.bookId] === null) return -1;
+
+            const firstBook = books.current[first.bookId];
+            const secondBook = books.current[second.bookId];
+
+            if (sortBy === "title" || sortBy === "rating")
+                return removeFirstArticle(firstBook.title.toLowerCase()).localeCompare(
+                    removeFirstArticle(secondBook.title.toLowerCase())
+                );
+            else if (sortBy === "author") {
+                if (!("authors" in firstBook) || !firstBook.authors.length) return 1;
+                if (!("authors" in secondBook) || !secondBook.authors.length) return 1;
+
+                const firstAuthor = authors.current[firstBook.authors[0]];
+                const secondAuthor = authors.current[secondBook.authors[0]];
+
+                return firstAuthor.name.localeCompare(secondAuthor.name);
+            } else return 0;
+        });
+
+        readingCopy.sort((first, second) => {
+            if (!(first.bookId in books.current) || books.current[first.bookId] === null) return 1;
+            if (!(second.bookId in books.current) || books.current[second.bookId] === null) return -1;
+
+            const firstBook = books.current[first.bookId];
+            const secondBook = books.current[second.bookId];
+
+            if (sortBy === "title" || sortBy === "rating")
+                return removeFirstArticle(firstBook.title.toLowerCase()).localeCompare(
+                    removeFirstArticle(secondBook.title.toLowerCase())
+                );
+            else if (sortBy === "author") {
+                if (!("authors" in firstBook) || !firstBook.authors.length) return 1;
+                if (!("authors" in secondBook) || !secondBook.authors.length) return 1;
+
+                const firstAuthor = authors.current[firstBook.authors[0]];
+                const secondAuthor = authors.current[secondBook.authors[0]];
+
+                return firstAuthor.name.localeCompare(secondAuthor.name);
+            } else return 0;
+        });
+        return {
+            sortedFinishedBooks: finishedCopy,
+            sortedWantToReadBooks: wantToReadCopy,
+            sortedReadingBooks: readingCopy,
+        };
     };
 
     // #################################################
@@ -225,6 +375,10 @@ const DataProvider = (props) => {
                 changeUserBookScore,
                 changeUserBookFinishDate,
                 getBookStatus,
+
+                // SORT
+                sort,
+                setSortOption,
 
                 // SEARCH
                 searchedAuthors,
