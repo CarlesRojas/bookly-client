@@ -159,7 +159,7 @@ export default function Book({ id }) {
                             <div className="linkInfoContainer" ref={linksContainerRef}>
                                 <SVG className="linkIcon" src={icon} />
                                 <ShowMoreText
-                                    lines={2}
+                                    lines={1}
                                     className="linkName"
                                     anchorClass="anchor"
                                     expanded={false}
