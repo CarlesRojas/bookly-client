@@ -9,7 +9,7 @@ import { Data } from "../../contexts/Data";
 const PADDING = 0.5;
 const TITLE_HEIGHT = 2.5;
 const REM_PX = 16;
-const SCORE_HEIGHT = 1.5;
+const SCORE_HEIGHT = 2;
 
 const SORTS = {
     title: "title",
