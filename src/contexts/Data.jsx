@@ -133,7 +133,7 @@ const DataProvider = (props) => {
         }
     };
 
-    const getBookStatus = (id) => {
+    const getBookUserData = (id) => {
         for (const bookInfo of finishedBooks) {
             if (id === bookInfo.bookId) return { ...bookInfo };
         }
@@ -374,7 +374,7 @@ const DataProvider = (props) => {
                 changeUserBookStatus,
                 changeUserBookScore,
                 changeUserBookFinishDate,
-                getBookStatus,
+                getBookUserData,
 
                 // SORT
                 sort,

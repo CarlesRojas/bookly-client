@@ -5,19 +5,20 @@ import useResize from "../hooks/useResize";
 
 import { Utils } from "../contexts/Utils";
 import { API } from "../contexts/API";
+import { Events } from "../contexts/Events";
 
 import StarIcon from "../resources/icons/star.svg";
 
-export default function Score({ bookId, score }) {
+export default function Score({ bookId, score, height }) {
     const { clamp } = useContext(Utils);
     const { changeBookScore } = useContext(API);
+    const { sub, unsub, emit } = useContext(Events);
 
     const containerRef = useRef();
     const containerBox = useRef({});
 
     const handleResize = () => {
         const box = containerRef.current.getBoundingClientRect();
-
         containerBox.current = box;
     };
     useResize(handleResize, true);
@@ -34,7 +35,8 @@ export default function Score({ bookId, score }) {
             const { type, touches } = event;
             let clientX = 0;
 
-            if (type === "touchmove" && touches && touches.length) clientX = touches[0].clientX;
+            if ((type === "touchmove" || type === "touchstart") && touches && touches.length)
+                clientX = touches[0].clientX;
             else clientX = event.clientX;
 
             const x = Math.ceil(
@@ -43,15 +45,17 @@ export default function Score({ bookId, score }) {
                     0.2
             );
 
-            setCurrScore(x);
+            if (Number.isNaN(x)) return;
 
-            return x;
+            setCurrScore(x);
         },
         [clamp, setCurrScore]
     );
 
     const handleMouseDown = useCallback(
         (event) => {
+            handleResize();
+
             scoring.current = true;
             calculateNewScore(event);
         },
@@ -68,12 +72,19 @@ export default function Score({ bookId, score }) {
 
     const handleMouseUp = useCallback(() => {
         if (!scoring.current) return;
-
         if (Number.isNaN(currScore)) return;
 
-        changeBookScore(bookId, currScore);
+        emit("onScoreChanged", { bookId, score: currScore });
         scoring.current = false;
-    }, [currScore, changeBookScore, bookId]);
+        changeBookScore(bookId, currScore);
+    }, [currScore, changeBookScore, bookId, emit]);
+
+    const handleScoreChanged = useCallback(
+        ({ bookId: id, score: newScore }) => {
+            if (id === bookId && newScore !== currScore) setCurrScore(newScore);
+        },
+        [bookId, currScore]
+    );
 
     // #################################################
     //   EVENTS
@@ -82,12 +93,14 @@ export default function Score({ bookId, score }) {
     useEffect(() => {
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("mouseup", handleMouseUp);
+        sub("onScoreChanged", handleScoreChanged);
 
         return () => {
             window.addEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
+            unsub("onScoreChanged", handleScoreChanged);
         };
-    }, [handleMouseMove, handleMouseUp]);
+    }, [handleMouseMove, handleMouseUp, handleScoreChanged, sub, unsub]);
 
     // #################################################
     //   RENDER
@@ -98,6 +111,8 @@ export default function Score({ bookId, score }) {
         stars.push(<SVG className={cn("star", { active: i < currScore })} src={StarIcon} key={i} />);
     }
 
+    const style = height ? { height: `${height}px` } : null;
+
     return (
         <div
             className="Score"
@@ -106,6 +121,7 @@ export default function Score({ bookId, score }) {
             onTouchMove={handleMouseMove}
             onTouchEnd={handleMouseUp}
             ref={containerRef}
+            style={style}
         >
             {stars}
         </div>

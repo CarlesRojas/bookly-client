@@ -17,7 +17,7 @@ import Status from "../Status";
 import FinishedOn from "../FinishedOn";
 
 export default function Book({ id }) {
-    const { books, authors, getBookStatus } = useContext(Data);
+    const { books, authors, getBookUserData } = useContext(Data);
     const { emit } = useContext(Events);
 
     // #################################################
@@ -71,7 +71,7 @@ export default function Book({ id }) {
 
     const authorInfo = bookAuthors.map((id) => (id in authors.current ? authors.current[id] : null));
 
-    const { monthFinished, score, status, yearFinished } = getBookStatus(id);
+    const { monthFinished, score, status, yearFinished } = getBookUserData(id);
 
     const correctStatus = status || "addToLibrary";
     const correctDescription =

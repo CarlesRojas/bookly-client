@@ -9,7 +9,7 @@ import { GlobalState } from "./GlobalState";
 const API_VERSION = "api_v1";
 const API_URL = "https://bookly-server.herokuapp.com/"; // "http://localhost:3100/"
 const OPEN_LIB_API_URL = "https://openlibrary.org";
-const IMAGE_SIZE = "M"; // "M" "L"
+const IMAGE_SIZE = "L"; // "M" "L"
 
 export const API = createContext();
 const APIProvider = (props) => {
@@ -191,6 +191,7 @@ const APIProvider = (props) => {
         return false;
     };
 
+    // TODO
     const changeEmail = async (password, newEmail) => {
         const postData = { password, email: newEmail.toLowerCase() };
 
@@ -220,6 +221,7 @@ const APIProvider = (props) => {
         }
     };
 
+    // TODO
     const changePassword = async (password, newPassword) => {
         const postData = { password, newPassword };
 
@@ -249,6 +251,7 @@ const APIProvider = (props) => {
         }
     };
 
+    // TODO
     const deleteAccount = async (password) => {
         const postData = { password };
 

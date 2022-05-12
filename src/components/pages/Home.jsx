@@ -9,6 +9,7 @@ import { Data } from "../../contexts/Data";
 const PADDING = 0.5;
 const TITLE_HEIGHT = 2.5;
 const REM_PX = 16;
+const SCORE_HEIGHT = 1.5;
 
 const SORTS = {
     title: "title",
@@ -44,7 +45,7 @@ export default function Home() {
     const handleResize = () => {
         const box = containerRef.current.getBoundingClientRect();
 
-        setCoverHeight((box.height - (TITLE_HEIGHT * 3 + PADDING * 6) * REM_PX) / 3);
+        setCoverHeight((box.height - (TITLE_HEIGHT * 3 + PADDING * 6 + SCORE_HEIGHT) * REM_PX) / 3);
     };
     useResize(handleResize, true);
 
@@ -144,7 +145,10 @@ export default function Home() {
             </p>
             <div
                 className="container"
-                style={{ height: `${coverHeight + PADDING * REM_PX * 2}px`, padding: `${PADDING}rem 0` }}
+                style={{
+                    height: `${coverHeight + PADDING * REM_PX * 2 + SCORE_HEIGHT * REM_PX}px`,
+                    padding: `${PADDING}rem 0`,
+                }}
             >
                 {finishedBooks.map((bookData, i) => (
                     <BookCover
@@ -153,6 +157,8 @@ export default function Home() {
                         coverHeight={coverHeight}
                         last={i === finishedBooks.length - 1}
                         forceShow
+                        showScore
+                        scoreHeight={SCORE_HEIGHT * REM_PX}
                     />
                 ))}
             </div>
