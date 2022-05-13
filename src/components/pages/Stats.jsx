@@ -129,55 +129,61 @@ export default function Stats() {
                 </div>
             </div>
 
-            <div className="graph neoDiv">
-                <div className="graphContent">
-                    {years.current.map((year) => {
-                        const value =
-                            year in booksPagesPerYear.current
-                                ? booksPagesPerYear.current[year][
-                                      selected === BUTTONS.pagesPerYear ? "pageCount" : "bookCount"
-                                  ]
-                                : 0;
+            {years.current.length > 0 && (
+                <div className="graph neoDiv">
+                    <div className="graphContent">
+                        {years.current.map((year) => {
+                            const value =
+                                year in booksPagesPerYear.current
+                                    ? booksPagesPerYear.current[year][
+                                          selected === BUTTONS.pagesPerYear ? "pageCount" : "bookCount"
+                                      ]
+                                    : 0;
 
-                        const maxValue =
-                            maxBooksPagesPeryear.current[selected === BUTTONS.pagesPerYear ? "maxPages" : "maxBooks"];
+                            const maxValue =
+                                maxBooksPagesPeryear.current[
+                                    selected === BUTTONS.pagesPerYear ? "maxPages" : "maxBooks"
+                                ];
 
-                        return (
-                            <div className="column" key={year}>
-                                <div className="barContainer">
-                                    <div
-                                        className="bar neoDiv"
-                                        style={{
-                                            height: `${(value / maxValue) * 100}%`,
-                                        }}
-                                    ></div>
+                            return (
+                                <div className="column" key={year}>
+                                    <div className="barContainer">
+                                        <div
+                                            className="bar neoDiv"
+                                            style={{
+                                                height: `${(value / maxValue) * 100}%`,
+                                            }}
+                                        ></div>
+                                    </div>
+
+                                    <p className="year">{year}</p>
+                                    <p className="value">{value}</p>
+                                    <p className="unit">
+                                        {selected === BUTTONS.pagesPerYear ? "pages" : value !== 1 ? "books" : "book"}
+                                    </p>
                                 </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
 
-                                <p className="year">{year}</p>
-                                <p className="value">{value}</p>
-                                <p className="unit">
-                                    {selected === BUTTONS.pagesPerYear ? "pages" : value !== 1 ? "books" : "book"}
-                                </p>
-                            </div>
-                        );
-                    })}
+            {years.current.length > 0 && (
+                <div className="graphSwitch">
+                    <div
+                        className={cn("switch", "neoButton", { active: selected === BUTTONS.pagesPerYear })}
+                        onClick={() => setSelected(BUTTONS.pagesPerYear)}
+                    >
+                        pages per year
+                    </div>
+                    <div
+                        className={cn("switch", "neoButton", { active: selected === BUTTONS.booksPerYear })}
+                        onClick={() => setSelected(BUTTONS.booksPerYear)}
+                    >
+                        books per year
+                    </div>
                 </div>
-            </div>
-
-            <div className="graphSwitch">
-                <div
-                    className={cn("switch", "neoButton", { active: selected === BUTTONS.pagesPerYear })}
-                    onClick={() => setSelected(BUTTONS.pagesPerYear)}
-                >
-                    pages per year
-                </div>
-                <div
-                    className={cn("switch", "neoButton", { active: selected === BUTTONS.booksPerYear })}
-                    onClick={() => setSelected(BUTTONS.booksPerYear)}
-                >
-                    books per year
-                </div>
-            </div>
+            )}
         </div>
     );
 }
