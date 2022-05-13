@@ -57,6 +57,28 @@ export default function Author({ id }) {
     useResize(handleResize, true);
 
     // #################################################
+    //   SCROLL HORIZONTALLY
+    // #################################################
+
+    const worksContainerRef = useRef();
+
+    const scrollWorks = (event) => {
+        event.preventDefault();
+        worksContainerRef.current.scrollLeft += event.deltaY;
+    };
+
+    useEffect(() => {
+        let worksContainerRefAux = worksContainerRef.current;
+
+        if (worksContainerRefAux) worksContainerRefAux.addEventListener("wheel", scrollWorks, { passive: false });
+
+        return () => {
+            if (worksContainerRefAux)
+                worksContainerRefAux.removeEventListener("wheel", scrollWorks, { passive: false });
+        };
+    }, []);
+
+    // #################################################
     //   BOOK DATA
     // #################################################
 
@@ -104,6 +126,7 @@ export default function Author({ id }) {
 
                 <div
                     className={cn("container", { center: !authorWorks || !authorWorks.length })}
+                    ref={worksContainerRef}
                     style={{ height: `${coverHeight + 16}px`, minHeight: `${coverHeight + 16}px` }}
                 >
                     {(!authorWorks || !authorWorks.length) && (
