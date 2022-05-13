@@ -1,4 +1,4 @@
-import { useContext, useRef, useState, useCallback } from "react";
+import { useContext, useRef, useState, useCallback, useEffect } from "react";
 import BookCover from "../BookCover";
 import useResize from "../../hooks/useResize";
 import cn from "classnames";
@@ -84,6 +84,45 @@ export default function Home() {
     useClickOutsideRef(sortRef, handleClickOutside);
 
     // #################################################
+    //   SCROLL HORIZONTALLY
+    // #################################################
+
+    const readingContainerRef = useRef();
+    const wantToReadContainerRef = useRef();
+    const finishedContainerRef = useRef();
+
+    const scrollReading = (event) => {
+        event.preventDefault();
+        readingContainerRef.current.scrollLeft += event.deltaY;
+    };
+
+    const scrollWantToRead = (event) => {
+        event.preventDefault();
+        wantToReadContainerRef.current.scrollLeft += event.deltaY;
+    };
+
+    const scrollFinished = (event) => {
+        event.preventDefault();
+        finishedContainerRef.current.scrollLeft += event.deltaY;
+    };
+
+    useEffect(() => {
+        let readingContainerRefAux = readingContainerRef.current;
+        let wantToReadContainerRefAux = wantToReadContainerRef.current;
+        let finishedContainerRefAux = finishedContainerRef.current;
+
+        readingContainerRefAux.addEventListener("wheel", scrollReading, { passive: false });
+        wantToReadContainerRefAux.addEventListener("wheel", scrollWantToRead, { passive: false });
+        finishedContainerRefAux.addEventListener("wheel", scrollFinished, { passive: false });
+
+        return () => {
+            readingContainerRefAux.removeEventListener("wheel", scrollReading, { passive: false });
+            wantToReadContainerRefAux.removeEventListener("wheel", scrollWantToRead, { passive: false });
+            finishedContainerRefAux.removeEventListener("wheel", scrollFinished, { passive: false });
+        };
+    }, []);
+
+    // #################################################
     //   RENDER
     // #################################################
 
@@ -123,6 +162,7 @@ export default function Home() {
 
                     <div
                         className="container"
+                        ref={readingContainerRef}
                         style={{ height: `${coverHeight + PADDING * REM_PX * 2}px`, padding: `${PADDING}rem 0` }}
                     >
                         {readingBooks.map((bookData, i) => (
@@ -141,6 +181,7 @@ export default function Home() {
                     </p>
                     <div
                         className="container"
+                        ref={wantToReadContainerRef}
                         style={{ height: `${coverHeight + PADDING * REM_PX * 2}px`, padding: `${PADDING}rem 0` }}
                     >
                         {wantToReadBooks.map((bookData, i) => (
@@ -159,6 +200,7 @@ export default function Home() {
                     </p>
                     <div
                         className="container"
+                        ref={finishedContainerRef}
                         style={{
                             height: `${coverHeight + PADDING * REM_PX * 2 + SCORE_HEIGHT * REM_PX}px`,
                             padding: `${PADDING}rem 0`,

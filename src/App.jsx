@@ -97,6 +97,6 @@ export default function App() {
     if (loggedIn === null) return null;
     else if (!loggedIn) return <Auth setLoggedIn={setLoggedIn} />;
     else if (loggedIn && dataLoaded && !loading)
-        return isMobile || isMobileSize || (isTablet && !isLandscape) ? <MobileLayout /> : <DesktopLayout />;
+        return isMobile || isMobileSize || (isTablet && !isLandscape) ? <MobileLayout /> : <MobileLayout />;
     else return <Loading />;
 }

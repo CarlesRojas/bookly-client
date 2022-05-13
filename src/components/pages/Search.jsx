@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import SVG from "react-inlinesvg";
 import cn from "classnames";
 import BookCover from "../BookCover";
@@ -18,6 +18,10 @@ export default function Search() {
     const { searchedBooks, setSearchedBooks, searchedAuthors, setSearchedAuthors } = useContext(Data);
     const { searchBooks } = useContext(API);
 
+    // #################################################
+    //   COVER HEIGHT
+    // #################################################
+
     const containerRef = useRef();
     const [hideResults, setHideResults] = useState(false);
     const [coverHeight, setCoverHeight] = useState(0);
@@ -28,6 +32,10 @@ export default function Search() {
         setCoverHeight((box.height - (TITLE_HEIGHT * 2 + PADDING * 4) * REM_PX) / 3);
     };
     useResize(handleResize, true);
+
+    // #################################################
+    //   SUBMIT
+    // #################################################
 
     const [loading, setLoading] = useState(false);
     const inputRef = useRef();
@@ -49,6 +57,40 @@ export default function Search() {
         setLoading(false);
     };
 
+    // #################################################
+    //   SCROLL HORIZONTALLY
+    // #################################################
+
+    const authorsContainerRef = useRef();
+    const booksContainerRef = useRef();
+
+    const scrollAuthors = (event) => {
+        event.preventDefault();
+        authorsContainerRef.current.scrollLeft += event.deltaY;
+    };
+
+    const scrollBooks = (event) => {
+        event.preventDefault();
+        booksContainerRef.current.scrollLeft += event.deltaY;
+    };
+
+    useEffect(() => {
+        let authorContainerRefAux = authorsContainerRef.current;
+        let booksContainerRefAux = booksContainerRef.current;
+
+        authorContainerRefAux.addEventListener("wheel", scrollAuthors, { passive: false });
+        booksContainerRefAux.addEventListener("wheel", scrollBooks, { passive: false });
+
+        return () => {
+            authorContainerRefAux.removeEventListener("wheel", scrollAuthors, { passive: false });
+            booksContainerRefAux.removeEventListener("wheel", scrollBooks, { passive: false });
+        };
+    }, []);
+
+    // #################################################
+    //   RENDER
+    // #################################################
+
     return (
         <div className="Search" ref={containerRef}>
             <div
@@ -59,6 +101,7 @@ export default function Search() {
                 </p>
                 <div
                     className="container"
+                    ref={authorsContainerRef}
                     style={{ height: `${coverHeight + PADDING * REM_PX * 2}px`, padding: `${PADDING}rem 0` }}
                 >
                     {searchedAuthors.map((authorId, i) => (
@@ -76,6 +119,7 @@ export default function Search() {
                 </p>
                 <div
                     className="container"
+                    ref={booksContainerRef}
                     style={{ height: `${coverHeight + PADDING * REM_PX * 2}px`, padding: `${PADDING}rem 0` }}
                 >
                     {searchedBooks.map((bookId, i) => (
