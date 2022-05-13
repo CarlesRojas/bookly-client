@@ -18,7 +18,3 @@ Login to Netlify with:
 **Every time**
 Run this (If prompted to choose a site, choose `estado-covid`):
 `npm run deploy`
-
-##TODO
-
--   [ ] Month in the future

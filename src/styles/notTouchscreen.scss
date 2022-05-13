@@ -181,7 +181,7 @@
             .yearSelector {
                 .icon {
                     transition: opacity 0.1s ease-in-out;
-                    opacity: 0.8;
+                    opacity: 0.7;
                     cursor: pointer;
 
                     &:hover {
@@ -193,7 +193,7 @@
             .monthSelector {
                 .month {
                     transition: opacity 0.1s ease-in-out;
-                    opacity: 0.8;
+                    opacity: 0.7;
                     cursor: pointer;
 
                     &:hover {
@@ -203,6 +203,11 @@
                     &.selected {
                         opacity: 1;
                         cursor: default;
+                    }
+
+                    &.disabled {
+                        cursor: default;
+                        opacity: 0.1;
                     }
                 }
             }

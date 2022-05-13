@@ -29,6 +29,7 @@ export default function FinishedOn({ bookId, monthFinished, yearFinished }) {
 
     const today = new Date();
     const currYear = today.getFullYear();
+    const currMonth = today.getMonth();
 
     // #################################################
     //   SELECTOR
@@ -109,7 +110,11 @@ export default function FinishedOn({ bookId, monthFinished, yearFinished }) {
                 <div className="monthSelector">
                     {MONTH_NAMES_SHORT.map((monthName, i) => (
                         <div
-                            className={cn("month", { selected: month === i })}
+                            className={cn(
+                                "month",
+                                { selected: month === i },
+                                { disabled: year === currYear && i > currMonth }
+                            )}
                             onClick={() => setMonth(i)}
                             key={monthName}
                         >
