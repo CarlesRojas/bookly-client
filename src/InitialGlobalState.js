@@ -1,5 +1,3 @@
-const initialState = {
-    userUpdated: 0,
-};
+const initialState = {};
 
 export default initialState;

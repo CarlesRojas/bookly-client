@@ -4,7 +4,6 @@ import { createContext, useContext } from "react";
 import { Utils } from "./Utils";
 import { Data } from "./Data";
 import { Events } from "./Events";
-import { GlobalState } from "./GlobalState";
 
 const API_VERSION = "api_v1";
 const API_URL = "https://bookly-server.herokuapp.com/"; // "http://localhost:3100/"
@@ -27,7 +26,6 @@ const APIProvider = (props) => {
         filterDuplicateBooks,
     } = useContext(Data);
     const { emit } = useContext(Events);
-    const { set, get } = useContext(GlobalState);
 
     // #################################################
     //   USER API
@@ -133,15 +131,14 @@ const APIProvider = (props) => {
 
             // Save new user
             if ("error" in response) {
-                clearInfo(APP_NAME);
+                logout();
                 return response;
             }
             user.current = response;
-            set("userUpdated", get("userUpdated") + 1);
 
             return response;
         } catch (error) {
-            clearInfo(APP_NAME);
+            logout();
             console.log(error);
             return { error: `Get user info error: ${error}` };
         }
@@ -159,7 +156,8 @@ const APIProvider = (props) => {
         setInfo(`${APP_NAME}_token`, token.current);
 
         // Save user info
-        await getUserInfo();
+        const userInfoResponse = await getUserInfo();
+        if ("error" in userInfoResponse) return false;
 
         return true;
     };
@@ -167,7 +165,6 @@ const APIProvider = (props) => {
     const logout = () => {
         token.current = null;
         user.current = null;
-        set("userUpdated", get("userUpdated") + 1);
 
         clearInfo(APP_NAME);
         emit("onLogout");
@@ -211,7 +208,6 @@ const APIProvider = (props) => {
             // Save new user
             if ("error" in response) return response;
             user.current = response;
-            set("userUpdated", get("userUpdated") + 1);
 
             return response;
         } catch (error) {
@@ -240,7 +236,6 @@ const APIProvider = (props) => {
             // Save new user
             if ("error" in response) return response;
             user.current = response;
-            set("userUpdated", get("userUpdated") + 1);
 
             return response;
         } catch (error) {
