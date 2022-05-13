@@ -69,15 +69,18 @@ export default function App() {
         loadData();
     }, [loggedIn, dataLoaded, getAllUserBooks, setUserBooks, set, APP_NAME, authors, books, getInfo, triggerLoading]);
 
-    // #################################################
-    //   EVENTS
-    // #################################################
+    useEffect(() => {
+        if (!loggedIn) loadedDone.current = false;
+    }, [loggedIn]);
 
     const handleLogout = useCallback(() => {
-        loadedDone.current = false;
         setDataLoaded(false);
         setLoggedIn(false);
     }, []);
+
+    // #################################################
+    //   EVENTS
+    // #################################################
 
     useEffect(() => {
         sub("onLogout", handleLogout);

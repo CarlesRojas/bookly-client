@@ -69,7 +69,7 @@ export default function Settings() {
 
             const response = await deleteAccount(passwordValue);
             if ("error" in response) setError(response.error);
-            else setDeleteExpanded(false);
+            return;
         }
 
         setLoading(false);
