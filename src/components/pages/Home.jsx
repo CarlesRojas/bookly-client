@@ -2,9 +2,12 @@ import { useContext, useRef, useState, useCallback } from "react";
 import BookCover from "../BookCover";
 import useResize from "../../hooks/useResize";
 import cn from "classnames";
+import SVG from "react-inlinesvg";
 import useClickOutsideRef from "../../hooks/useClickOutsideRef";
 
 import { Data } from "../../contexts/Data";
+
+import SortIcon from "../../resources/icons/sort.svg";
 
 const PADDING = 0.5;
 const TITLE_HEIGHT = 2.5;
@@ -104,6 +107,8 @@ export default function Home() {
                     <p className="sortOption" onClick={handleClickOutside}>
                         {SORTS[sort]}
                     </p>
+
+                    <SVG className="sortIcon" src={SortIcon} />
                 </div>
             </div>
 
