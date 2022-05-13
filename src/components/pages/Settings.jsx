@@ -83,14 +83,17 @@ export default function Settings() {
         if (type === TYPES.changeEmail) setEmailExpanded(false);
         else if (type === TYPES.changePassword) setPasswordExpanded(false);
         else if (type === TYPES.deleteAccount) setDeleteExpanded(false);
+        else if (type === "error") setError(null);
     }, []);
 
     const emailRef = useRef();
     const passwordRef = useRef();
     const accountRef = useRef();
+    const errorRef = useRef();
     useClickOutsideRef(emailRef, () => handleClickOutside(TYPES.changeEmail));
     useClickOutsideRef(passwordRef, () => handleClickOutside(TYPES.changePassword));
     useClickOutsideRef(accountRef, () => handleClickOutside(TYPES.deleteAccount));
+    useClickOutsideRef(errorRef, () => handleClickOutside("error"));
 
     // #################################################
     //   RENDER
@@ -212,7 +215,9 @@ export default function Settings() {
                 </form>
             </div>
 
-            <div className={cn("error", { visible: !!error })}>{error || "-"}</div>
+            <div className={cn("error", { visible: !!error })} ref={errorRef}>
+                {error || "-"}
+            </div>
         </div>
     );
 }
