@@ -10,7 +10,7 @@ import Popup from "./Popup";
 
 const STAGES = ["home", "search", "stats", "settings"];
 
-export default function MobileLayout() {
+export default function Layout() {
     // #################################################
     //   PAGE ANIMATION
     // #################################################
@@ -39,7 +39,7 @@ export default function MobileLayout() {
     // #################################################
 
     return (
-        <div className="MobileLayout">
+        <div className="Layout">
             <div className="mainPagesContent">{renderedPages}</div>
 
             <Popup />

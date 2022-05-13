@@ -76,25 +76,31 @@ export default function Navbar({ setPage, currentPage }) {
 
     return (
         <div className={cn("Navbar", { showBack })}>
-            <div className="main neoButton">
-                {PAGES.map(({ name, icon }, i) => (
-                    <SVG
-                        className={cn("icon", { selected: selected === i })}
-                        src={icon}
-                        onClick={() => setSelected(i)}
-                        key={name}
-                    />
-                ))}
+            <div className="main">
+                <div className="mainContents neoButton">
+                    {PAGES.map(({ name, icon }, i) => (
+                        <SVG
+                            className={cn("icon", { selected: selected === i })}
+                            src={icon}
+                            onClick={() => setSelected(i)}
+                            key={name}
+                        />
+                    ))}
+                </div>
             </div>
 
-            <div className="close neoButton" onClick={() => emit("onCloseAllButtonClicked")}>
-                <SVG className="icon" src={CloseIcon} />
-                <p>close all</p>
+            <div className="leftButtonContents">
+                <div className="close neoButton" onClick={() => emit("onCloseAllButtonClicked")}>
+                    <SVG className="icon" src={CloseIcon} />
+                    <p>close all</p>
+                </div>
             </div>
 
-            <div className="back neoButton" onClick={() => emit("onBackButtonClicked")}>
-                <SVG className="icon" src={BackIcon} />
-                <p>back</p>
+            <div className="rightButtonContents">
+                <div className="back neoButton" onClick={() => emit("onBackButtonClicked")}>
+                    <SVG className="icon" src={BackIcon} />
+                    <p>back</p>
+                </div>
             </div>
         </div>
     );

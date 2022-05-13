@@ -3,4 +3,270 @@
 @import "./animations";
 
 .isNotTouchscreen {
+    // #######################################
+    //      LAYOUT
+    // #######################################
+
+    .Navbar {
+        .icon {
+            transition: opacity 0.1s ease-in-out;
+            cursor: pointer;
+
+            &.selected {
+                cursor: default;
+            }
+
+            &:hover {
+                opacity: 0.6 !important;
+
+                &.selected {
+                    opacity: 0.8 !important;
+                }
+            }
+        }
+
+        .leftButtonContents,
+        .rightButtonContents {
+            .back,
+            .close {
+                transition: opacity 0.1s ease-in-out;
+                opacity: 0.8;
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    // #######################################
+    //      PAGES
+    // #######################################
+
+    .Search,
+    .Home {
+        .topSection {
+            .sortPopup {
+                cursor: pointer;
+
+                .newSortOption {
+                    &.visible {
+                        opacity: 0.7;
+                        cursor: pointer;
+
+                        &:hover {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .Stats {
+        .graphSwitch {
+            .switch {
+                transition: opacity 0.1s ease-in-out;
+                cursor: pointer;
+                opacity: 0.8;
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                &.active {
+                    cursor: default;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .Settings {
+        .logoutDiv {
+            cursor: pointer;
+            opacity: 0.8;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        .expandableSection {
+            cursor: pointer;
+            opacity: 0.8;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &.expanded {
+                opacity: 1;
+            }
+        }
+    }
+
+    .Book,
+    .Author {
+        .author {
+            transition: opacity 0.1s ease-in-out;
+            opacity: 0.5;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        .links {
+            .link {
+                transition: opacity 0.1s ease-in-out;
+                opacity: 0.8;
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .Score {
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    .Status {
+        opacity: 0.8;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &.expanded {
+            opacity: 1;
+            cursor: default;
+        }
+
+        .newOption {
+            &.visible {
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .FinishedOn {
+        cursor: pointer;
+        opacity: 0.8;
+
+        &:hover {
+            opacity: 1;
+        }
+
+        &.expanded {
+            opacity: 1;
+            cursor: default;
+        }
+
+        .selector {
+            .yearSelector {
+                .icon {
+                    transition: opacity 0.1s ease-in-out;
+                    opacity: 0.8;
+                    cursor: pointer;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            .monthSelector {
+                .month {
+                    transition: opacity 0.1s ease-in-out;
+                    opacity: 0.8;
+                    cursor: pointer;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+
+                    &.selected {
+                        opacity: 1;
+                        cursor: default;
+                    }
+                }
+            }
+
+            .saveButton {
+                transition: opacity 0.1s ease-in-out;
+                opacity: 0.8;
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    // #######################################
+    //      COMPONENTS
+    // #######################################
+
+    .BookCover {
+        .imageContainer {
+            transition: transform 0.1s ease-in-out;
+            transform: scale(1);
+            cursor: pointer;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
+
+    .AuthorPhoto {
+        transition: transform 0.1s ease-in-out;
+        transform: scale(1);
+        cursor: pointer;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    // #######################################
+    //      OTHERS
+    // #######################################
+
+    .form {
+        .submit {
+            transition: opacity 0.1s ease-in-out;
+            cursor: pointer;
+            opacity: 0.8;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        .change {
+            transition: opacity 0.1s ease-in-out;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
 }

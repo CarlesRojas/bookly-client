@@ -79,16 +79,6 @@
 //      LAYOUT
 // #######################################
 
-.DesktopLayout {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-}
-
 .Loading {
     position: absolute;
     display: flex;
@@ -100,12 +90,14 @@
     top: 0;
     left: 0;
     background-color: $background;
+    pointer-events: all;
 
     .icon {
         height: 5rem;
         max-height: 5rem;
         min-height: 5rem;
         color: black;
+        pointer-events: none;
     }
 
     .title {
@@ -116,6 +108,7 @@
         font-size: 2rem;
         font-weight: 700;
         -webkit-text-fill-color: transparent;
+        pointer-events: none;
     }
 
     .loading {
@@ -124,10 +117,11 @@
         min-height: 2rem;
         color: black;
         opacity: 0.3;
+        pointer-events: none;
     }
 }
 
-.MobileLayout {
+.Layout {
     position: relative;
     height: 100%;
     width: 100%;
@@ -169,54 +163,75 @@
         position: absolute;
         display: flex;
         align-items: center;
-        justify-content: space-evenly;
+        justify-content: center;
         height: calc(100% - #{$margin * 2});
         width: calc(50% - #{$margin * 2});
         top: 0;
         left: 0;
         margin: $margin;
 
-        .icon {
-            transition: opacity 0.2s ease-in-out;
-            opacity: 0.2;
+        .mainContents {
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            width: 100%;
+            max-width: 25rem;
 
-            &.selected {
-                opacity: 0.8;
+            .icon {
+                transition: opacity 0.2s ease-in-out;
+                opacity: 0.2;
+
+                &.selected {
+                    opacity: 0.8;
+                }
             }
         }
     }
 
-    .back,
-    .close {
+    .leftButtonContents,
+    .rightButtonContents {
         position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: calc(100% - #{$margin * 2});
-        width: calc(25% - #{$margin * 2});
+        height: 100%;
+        width: 25%;
         top: 0;
         left: 75%;
-        margin: $margin;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: $margin;
 
-        .icon,
-        p {
-            pointer-events: none;
-            opacity: 0.8;
+        .back,
+        .close {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 15rem;
+
+            .icon,
+            p {
+                pointer-events: none;
+                opacity: 0.8;
+            }
+
+            p {
+                padding-right: $navBarheight * 0.23;
+                font-size: 0.9rem;
+                font-weight: 700;
+            }
         }
 
-        p {
-            padding-right: $navBarheight * 0.23;
-            font-size: 0.9rem;
-            font-weight: 700;
+        .close {
+            .icon {
+                padding: $navBarheight * 0.26;
+            }
         }
     }
 
-    .close {
+    .leftButtonContents {
+        justify-content: flex-end;
         left: 50%;
-
-        .icon {
-            padding: $navBarheight * 0.26;
-        }
     }
 }
 
@@ -358,6 +373,7 @@
         width: 90%;
         max-width: 25rem;
         padding: 2rem;
+        pointer-events: none;
 
         .icon {
             height: 3rem;

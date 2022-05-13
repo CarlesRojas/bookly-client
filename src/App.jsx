@@ -1,12 +1,10 @@
 import { useContext, useEffect, useState, useCallback, useRef } from "react";
 import Auth from "./components/auth/Auth";
-import DesktopLayout from "./components/layout/DesktopLayout";
-import MobileLayout from "./components/layout/MobileLayout";
+import Layout from "./components/layout/Layout";
 import Loading from "./components/layout/Loading";
 import useCssOneTimeAnimation from "./hooks/useCssOneTimeAnimation";
 
 import { API } from "./contexts/API";
-import { MediaQuery } from "./contexts/MediaQuery";
 import { Events } from "./contexts/Events";
 import { GlobalState } from "./contexts/GlobalState";
 import { Data } from "./contexts/Data";
@@ -14,7 +12,6 @@ import { Utils } from "./contexts/Utils";
 
 export default function App() {
     const { isLoggedIn, getAllUserBooks } = useContext(API);
-    const { isMobile, isTablet, isMobileSize, isLandscape } = useContext(MediaQuery);
     const { sub, unsub } = useContext(Events);
     const { set } = useContext(GlobalState);
     const { APP_NAME, setUserBooks, books, authors } = useContext(Data);
@@ -96,7 +93,6 @@ export default function App() {
 
     if (loggedIn === null) return null;
     else if (!loggedIn) return <Auth setLoggedIn={setLoggedIn} />;
-    else if (loggedIn && dataLoaded && !loading)
-        return isMobile || isMobileSize || (isTablet && !isLandscape) ? <MobileLayout /> : <MobileLayout />;
+    else if (loggedIn && dataLoaded && !loading) return <Layout />;
     else return <Loading />;
 }
