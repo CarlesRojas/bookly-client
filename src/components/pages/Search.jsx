@@ -78,12 +78,14 @@ export default function Search() {
         let authorContainerRefAux = authorsContainerRef.current;
         let booksContainerRefAux = booksContainerRef.current;
 
-        authorContainerRefAux.addEventListener("wheel", scrollAuthors, { passive: false });
-        booksContainerRefAux.addEventListener("wheel", scrollBooks, { passive: false });
+        if (authorContainerRefAux) authorContainerRefAux.addEventListener("wheel", scrollAuthors, { passive: false });
+        if (booksContainerRefAux) booksContainerRefAux.addEventListener("wheel", scrollBooks, { passive: false });
 
         return () => {
-            authorContainerRefAux.removeEventListener("wheel", scrollAuthors, { passive: false });
-            booksContainerRefAux.removeEventListener("wheel", scrollBooks, { passive: false });
+            if (authorContainerRefAux)
+                authorContainerRefAux.removeEventListener("wheel", scrollAuthors, { passive: false });
+            if (booksContainerRefAux)
+                booksContainerRefAux.removeEventListener("wheel", scrollBooks, { passive: false });
         };
     }, []);
 

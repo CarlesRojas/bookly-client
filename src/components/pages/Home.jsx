@@ -111,14 +111,19 @@ export default function Home() {
         let wantToReadContainerRefAux = wantToReadContainerRef.current;
         let finishedContainerRefAux = finishedContainerRef.current;
 
-        readingContainerRefAux.addEventListener("wheel", scrollReading, { passive: false });
-        wantToReadContainerRefAux.addEventListener("wheel", scrollWantToRead, { passive: false });
-        finishedContainerRefAux.addEventListener("wheel", scrollFinished, { passive: false });
+        if (readingContainerRefAux) readingContainerRefAux.addEventListener("wheel", scrollReading, { passive: false });
+        if (wantToReadContainerRefAux)
+            wantToReadContainerRefAux.addEventListener("wheel", scrollWantToRead, { passive: false });
+        if (finishedContainerRefAux)
+            finishedContainerRefAux.addEventListener("wheel", scrollFinished, { passive: false });
 
         return () => {
-            readingContainerRefAux.removeEventListener("wheel", scrollReading, { passive: false });
-            wantToReadContainerRefAux.removeEventListener("wheel", scrollWantToRead, { passive: false });
-            finishedContainerRefAux.removeEventListener("wheel", scrollFinished, { passive: false });
+            if (readingContainerRefAux)
+                readingContainerRefAux.removeEventListener("wheel", scrollReading, { passive: false });
+            if (wantToReadContainerRefAux)
+                wantToReadContainerRefAux.removeEventListener("wheel", scrollWantToRead, { passive: false });
+            if (finishedContainerRefAux)
+                finishedContainerRefAux.removeEventListener("wheel", scrollFinished, { passive: false });
         };
     }, []);
 
