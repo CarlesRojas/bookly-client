@@ -191,7 +191,6 @@ const APIProvider = (props) => {
         return false;
     };
 
-    // TODO
     const changeEmail = async (password, newEmail) => {
         const postData = { password, email: newEmail.toLowerCase() };
 
@@ -221,7 +220,6 @@ const APIProvider = (props) => {
         }
     };
 
-    // TODO
     const changePassword = async (password, newPassword) => {
         const postData = { password, newPassword };
 
@@ -251,7 +249,6 @@ const APIProvider = (props) => {
         }
     };
 
-    // TODO
     const deleteAccount = async (password) => {
         const postData = { password };
 
