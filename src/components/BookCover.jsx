@@ -9,28 +9,30 @@ import { Events } from "../contexts/Events";
 
 import Logo from "../resources/icons/logo.svg";
 
-export default function BookCover({ bookId, coverHeight, last, forceShow, showScore, scoreHeight }) {
+const ASPECT_RATIO = 1.53;
+
+export default function BookCover({ bookId, coverWidth, last, forceShow, showScore, scoreHeight, MARGIN, REM_PX }) {
     const { books, authors, getBookUserData } = useContext(Data);
     const { emit } = useContext(Events);
 
     const bookInfo = books.current[bookId];
 
     const coverStyle = {
-        height: `${coverHeight}px`,
-        minHeight: `${coverHeight}px`,
-        maxHeight: `${coverHeight}px`,
-        width: `${coverHeight * 0.65}px`,
-        minWidth: `${coverHeight * 0.65}px`,
-        maxWidth: `${coverHeight * 0.65}px`,
+        height: `${coverWidth * ASPECT_RATIO - MARGIN * 2 * REM_PX}px`,
+        minHeight: `${coverWidth * ASPECT_RATIO - MARGIN * 2 * REM_PX}px`,
+        maxHeight: `${coverWidth * ASPECT_RATIO - MARGIN * 2 * REM_PX}px`,
+        width: `${coverWidth - MARGIN * REM_PX}px`,
+        minWidth: `${coverWidth - MARGIN * REM_PX}px`,
+        maxWidth: `${coverWidth - MARGIN * REM_PX}px`,
     };
-
     const containerStyle = {
-        height: `${coverHeight + (showScore ? scoreHeight : 0)}px`,
-        minHeight: `${coverHeight + (showScore ? scoreHeight : 0)}px`,
-        maxHeight: `${coverHeight + (showScore ? scoreHeight : 0)}px`,
-        width: `${coverHeight * 0.65}px`,
-        minWidth: `${coverHeight * 0.65}px`,
-        maxWidth: `${coverHeight * 0.65}px`,
+        height: `${coverWidth * ASPECT_RATIO + (showScore ? scoreHeight : 0)}px`,
+        minHeight: `${coverWidth * ASPECT_RATIO + (showScore ? scoreHeight : 0)}px`,
+        maxHeight: `${coverWidth * ASPECT_RATIO + (showScore ? scoreHeight : 0)}px`,
+        width: `${coverWidth + (last ? MARGIN * REM_PX : 0)}px`,
+        minWidth: `${coverWidth + (last ? MARGIN * REM_PX : 0)}px`,
+        maxWidth: `${coverWidth + (last ? MARGIN * REM_PX : 0)}px`,
+        padding: `${MARGIN}rem ${last ? MARGIN : 0}rem ${MARGIN}rem ${MARGIN}rem`,
     };
 
     const { score } = getBookUserData(bookId);
@@ -39,7 +41,7 @@ export default function BookCover({ bookId, coverHeight, last, forceShow, showSc
         bookInfo && "authors" in bookInfo && bookInfo.authors.length ? authors.current[bookInfo.authors[0]] : null;
 
     return forceShow || (bookInfo && "title" in bookInfo && authorInfo && "name" in authorInfo) ? (
-        <div className={cn("BookCover", { last })} style={containerStyle}>
+        <div className="BookCover" style={containerStyle}>
             <div
                 className="imageContainer neoDiv"
                 style={coverStyle}
@@ -57,7 +59,7 @@ export default function BookCover({ bookId, coverHeight, last, forceShow, showSc
                                 className="titleContent"
                                 anchorClass="anchor"
                                 expanded={false}
-                                width={coverHeight * 0.6}
+                                width={coverWidth * 0.9}
                                 truncatedEndingComponent={"..."}
                             >
                                 <p className="title">{bookInfo.title}</p>
@@ -70,7 +72,7 @@ export default function BookCover({ bookId, coverHeight, last, forceShow, showSc
                                 className="authorContent"
                                 anchorClass="anchor"
                                 expanded={false}
-                                width={coverHeight * 0.6}
+                                width={coverWidth * 0.9}
                                 truncatedEndingComponent={"..."}
                             >
                                 <p className="author">{authorInfo.name}</p>

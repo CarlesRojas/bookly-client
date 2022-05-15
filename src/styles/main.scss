@@ -143,20 +143,21 @@
     width: 200%;
     bottom: 0;
     left: 0;
+    background-color: $background;
 
     &.showBack {
         transform: translateX(-50%);
     }
 
     .icon {
-        height: $navBarheight - ($margin * 2);
-        max-height: $navBarheight - ($margin * 2);
-        min-height: $navBarheight - ($margin * 2);
-        width: $navBarheight - ($margin * 2);
-        max-width: $navBarheight - ($margin * 2);
-        min-width: $navBarheight - ($margin * 2);
+        height: $navBarheight - $margin;
+        max-height: $navBarheight - $margin;
+        min-height: $navBarheight - $margin;
+        width: $navBarheight - $margin;
+        max-width: $navBarheight - $margin;
+        min-width: $navBarheight - $margin;
         color: $text;
-        padding: $navBarheight * 0.23;
+        padding: $navBarheight * 0.25;
     }
 
     .main {
@@ -164,11 +165,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: calc(100% - #{$margin * 2});
+        height: calc(100% - #{$margin});
         width: calc(50% - #{$margin * 2});
         top: 0;
         left: 0;
-        margin: $margin;
+        margin: $margin * 0.5;
 
         .mainContents {
             display: flex;
@@ -198,7 +199,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: $margin;
+        padding: $margin * 0.5;
 
         .back,
         .close {
@@ -299,6 +300,143 @@
         overflow-x: auto;
         overflow-y: visible;
         overscroll-behavior: contain;
+    }
+
+    .topSection {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-right: $margin;
+
+        .sortPopup {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            transition: max-width 0.2s ease-in-out;
+            height: 85%;
+            width: 14.5rem;
+            max-width: 6.5rem;
+            padding-left: 0.5rem;
+
+            &.expanded {
+                max-width: 14.5rem;
+            }
+
+            .sortOption,
+            .newSortOption {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                width: 4rem;
+                max-width: 4rem;
+                color: $purple;
+                opacity: 1;
+                font-size: 0.85rem;
+                font-weight: 600;
+            }
+
+            .newSortOption {
+                transition: opacity 0.2s ease-in-out, max-width 0.2s ease-in-out;
+                height: 100%;
+                width: 4rem;
+                max-width: 0rem;
+                color: $text;
+                opacity: 0;
+
+                &.visible {
+                    max-width: 4rem;
+                    opacity: 0.7;
+                }
+            }
+
+            .sortIcon {
+                height: 1.5rem;
+                max-height: 1.5rem;
+                min-height: 1.5rem;
+                width: 1.5rem;
+                max-width: 1.5rem;
+                min-width: 1.5rem;
+                color: $purple;
+                margin-right: 0.5rem;
+                padding: 0.25rem;
+            }
+        }
+    }
+
+    .welcome {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        max-width: 25rem;
+        padding: 2rem;
+        pointer-events: none;
+
+        .icon {
+            height: 3rem;
+            max-height: 3rem;
+            min-height: 3rem;
+            width: 3rem;
+            max-width: 3rem;
+            min-width: 3rem;
+            margin-bottom: 0.5rem;
+            padding: 0.25rem;
+        }
+
+        .title {
+            background: linear-gradient(to right, #c585d8 0%, #9c67fb 100%);
+            background-clip: text;
+            color: $purple;
+            opacity: 1;
+            margin-bottom: 2rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text {
+            color: $text;
+            opacity: 0.5;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+        }
+    }
+}
+
+.NewHome {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+
+    &.empty {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .section {
+        display: flex;
+        align-items: flex-end;
+        opacity: 0.9;
+        margin: 0 $margin;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
     }
 
     .topSection {
@@ -1204,19 +1342,27 @@
     flex-direction: column;
     align-items: center;
     overflow: visible;
-    margin-left: $margin;
-
-    &.last {
-        margin-right: $margin;
-    }
 
     .imageContainer {
+        position: relative;
         overflow: hidden;
+        height: 100%;
+        max-height: 100%;
+        min-height: 100%;
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
 
         .cover {
             pointer-events: none;
             user-select: none;
             object-fit: cover;
+            height: 100%;
+            max-height: 100%;
+            min-height: 100%;
+            width: 100%;
+            max-width: 100%;
+            min-width: 100%;
         }
 
         .noCoverContainer {

@@ -1,12 +1,13 @@
 import { useRef } from "react";
 import usePageAnimation from "../../hooks/usePageAnimation";
 
-import Home from "../pages/Home";
+// import Home from "../pages/Home";
 import Search from "../pages/Search";
 import Stats from "../pages/Stats";
 import Settings from "../pages/Settings";
 import Navbar from "./Navbar";
 import Popup from "./Popup";
+import NewHome from "../pages/NewHome";
 
 const STAGES = ["home", "search", "stats", "settings"];
 
@@ -19,7 +20,7 @@ export default function Layout() {
 
     const animationSpeed = 300;
     const content = STAGES.map((id) => {
-        if (id === "home") return <Home />;
+        if (id === "home") return <NewHome />;
         else if (id === "search") return <Search />;
         else if (id === "stats") return <Stats />;
         else if (id === "settings") return <Settings />;
