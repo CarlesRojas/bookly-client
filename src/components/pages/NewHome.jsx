@@ -44,22 +44,23 @@ export default function NewHome() {
     // #################################################
 
     const containerRef = useRef();
-    const horizontalTiles = useRef(1);
-    const [coverWidth, setCoverWidth] = useState(0);
+    // const horizontalTiles = useRef(1);
+    // const [coverWidth, setCoverWidth] = useState(0);
+    const [horizontalTiles, setHorizontalTiles] = useState(0);
 
     const handleResize = () => {
         const box = containerRef.current.getBoundingClientRect();
 
         let newCoverWidth = 0;
-        horizontalTiles.current = 1;
+        let currHorizontalTiles = 1;
 
         do {
-            let newWidth = (box.width - MARGIN * REM_PX) / horizontalTiles.current;
-            if (newWidth > 180) horizontalTiles.current++;
+            let newWidth = box.width / currHorizontalTiles;
+            if (newWidth > 180) currHorizontalTiles++;
             else newCoverWidth = newWidth;
         } while (newCoverWidth === 0);
 
-        setCoverWidth(newCoverWidth);
+        setHorizontalTiles(currHorizontalTiles);
     };
     useResize(handleResize, true);
 
@@ -97,6 +98,15 @@ export default function NewHome() {
     //   RENDER
     // #################################################
 
+    const containerStyle = {
+        gridGap: `${MARGIN}rem`,
+        gridTemplateColumns: `repeat(${horizontalTiles}, 1fr)`,
+        padding: `${MARGIN}rem`,
+        width: "100%",
+        minWidth: "100%",
+        maxWidth: "100%",
+    };
+
     const booksAvailable = finishedBooks.length > 0 || wantToReadBooks.length > 0 || readingBooks.length > 0;
 
     return (
@@ -131,12 +141,12 @@ export default function NewHome() {
                         </div>
                     </div>
 
-                    <div className="container">
+                    <div className="container" style={containerStyle}>
                         {readingBooks.map((bookData, i) => (
                             <BookCover
                                 key={bookData.bookId}
                                 bookId={bookData.bookId}
-                                coverWidth={coverWidth}
+                                // coverWidth={coverWidth}
                                 last={i === readingBooks.length - 1}
                                 MARGIN={MARGIN}
                                 REM_PX={REM_PX}
@@ -148,12 +158,12 @@ export default function NewHome() {
                     <p className="section" style={{ height: `${TITLE_HEIGHT}rem` }}>
                         want to read
                     </p>
-                    <div className="container">
+                    <div className="container" style={containerStyle}>
                         {wantToReadBooks.map((bookData, i) => (
                             <BookCover
                                 key={bookData.bookId}
                                 bookId={bookData.bookId}
-                                coverWidth={coverWidth}
+                                // coverWidth={coverWidth}
                                 last={i === wantToReadBooks.length - 1}
                                 MARGIN={MARGIN}
                                 REM_PX={REM_PX}
@@ -165,12 +175,12 @@ export default function NewHome() {
                     <p className="section" style={{ height: `${TITLE_HEIGHT}rem` }}>
                         finished
                     </p>
-                    <div className="container">
+                    <div className="container" style={containerStyle}>
                         {finishedBooks.map((bookData, i) => (
                             <BookCover
                                 key={bookData.bookId}
                                 bookId={bookData.bookId}
-                                coverWidth={coverWidth}
+                                // coverWidth={coverWidth}
                                 last={i === finishedBooks.length - 1}
                                 MARGIN={MARGIN}
                                 REM_PX={REM_PX}
