@@ -1,11 +1,11 @@
-import { useContext, useRef, useState, useCallback, useEffect } from "react";
-import cn from "classnames";
+import cn from 'classnames';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-import { Data } from "../../contexts/Data";
+import { Data } from '../../contexts/Data';
 
 const BUTTONS = {
-    booksPerYear: "books per year",
-    pagesPerYear: "pages per year",
+    booksPerYear: 'books per year',
+    pagesPerYear: 'pages per year'
 };
 
 export default function Stats() {
@@ -28,9 +28,14 @@ export default function Stats() {
         const result = {};
 
         finishedBooks.forEach((book) => {
-            const { yearFinished } = book;
+            const { yearFinished, rereads } = book;
             if (!(yearFinished in result)) result[yearFinished] = [];
             result[yearFinished].push({ ...book });
+
+            rereads.forEach(({ year }) => {
+                if (!(year in result)) result[year] = [];
+                result[year].push({ ...book });
+            });
         });
 
         minYear.current = Number.MAX_VALUE;
@@ -64,6 +69,11 @@ export default function Stats() {
 
         totalNumBooksFinished.current = finishedBooks.length;
         totalPagesRead.current = finishedBooks.reduce((count, { bookId }) => books.current[bookId].numPages + count, 0);
+        totalPagesRead.current += finishedBooks.reduce(
+            (count, { bookId, rereads }) => (rereads ? books.current[bookId].numPages * rereads.length + count : count),
+            0
+        );
+
         averagePagesPerYear.current =
             Object.values(booksByYear.current)
                 .map((yearBooks) => yearBooks.reduce((count, { bookId }) => books.current[bookId].numPages + count, 0))
@@ -84,7 +94,7 @@ export default function Stats() {
                 booksPagesPerYear.current[year] = yearBooks.reduce(
                     ({ pageCount, bookCount }, { bookId }) => ({
                         pageCount: books.current[bookId].numPages + pageCount,
-                        bookCount: bookCount + 1,
+                        bookCount: bookCount + 1
                     }),
                     { pageCount: 0, bookCount: 0 }
                 );
@@ -136,13 +146,13 @@ export default function Stats() {
                             const value =
                                 year in booksPagesPerYear.current
                                     ? booksPagesPerYear.current[year][
-                                          selected === BUTTONS.pagesPerYear ? "pageCount" : "bookCount"
+                                          selected === BUTTONS.pagesPerYear ? 'pageCount' : 'bookCount'
                                       ]
                                     : 0;
 
                             const maxValue =
                                 maxBooksPagesPeryear.current[
-                                    selected === BUTTONS.pagesPerYear ? "maxPages" : "maxBooks"
+                                    selected === BUTTONS.pagesPerYear ? 'maxPages' : 'maxBooks'
                                 ];
 
                             return (
@@ -151,7 +161,7 @@ export default function Stats() {
                                         <div
                                             className="bar neoDiv"
                                             style={{
-                                                height: `${(value / maxValue) * 100}%`,
+                                                height: `${(value / maxValue) * 100}%`
                                             }}
                                         ></div>
                                     </div>
@@ -159,7 +169,7 @@ export default function Stats() {
                                     <p className="year">{year}</p>
                                     <p className="value">{value}</p>
                                     <p className="unit">
-                                        {selected === BUTTONS.pagesPerYear ? "pages" : value !== 1 ? "books" : "book"}
+                                        {selected === BUTTONS.pagesPerYear ? 'pages' : value !== 1 ? 'books' : 'book'}
                                     </p>
                                 </div>
                             );
@@ -171,13 +181,13 @@ export default function Stats() {
             {years.current.length > 0 && (
                 <div className="graphSwitch">
                     <div
-                        className={cn("switch", "neoButton", { active: selected === BUTTONS.pagesPerYear })}
+                        className={cn('switch', 'neoButton', { active: selected === BUTTONS.pagesPerYear })}
                         onClick={() => setSelected(BUTTONS.pagesPerYear)}
                     >
                         pages per year
                     </div>
                     <div
-                        className={cn("switch", "neoButton", { active: selected === BUTTONS.booksPerYear })}
+                        className={cn('switch', 'neoButton', { active: selected === BUTTONS.booksPerYear })}
                         onClick={() => setSelected(BUTTONS.booksPerYear)}
                     >
                         books per year
