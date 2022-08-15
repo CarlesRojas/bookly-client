@@ -1,6 +1,6 @@
-@import "./variables";
-@import "./global";
-@import "./animations";
+@import './variables';
+@import './global';
+@import './animations';
 
 .isNotTouchscreen {
     // #######################################
@@ -109,6 +109,18 @@
 
     .Book,
     .Author {
+        .rereads {
+            .addReread {
+                transition: opacity 0.1s ease-in-out;
+                opacity: 0.8;
+                cursor: pointer;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
         .author {
             transition: opacity 0.1s ease-in-out;
             opacity: 0.5;
@@ -165,16 +177,32 @@
     }
 
     .FinishedOn {
-        cursor: pointer;
-        opacity: 0.8;
+        .main {
+            .mainContainer {
+                cursor: pointer;
+                opacity: 0.8;
 
-        &:hover {
-            opacity: 1;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+
+            .removeIcon {
+                cursor: pointer;
+
+                &:hover {
+                    color: rgb(182, 32, 32);
+                }
+            }
         }
 
         &.expanded {
-            opacity: 1;
-            cursor: default;
+            .main {
+                .mainContainer {
+                    opacity: 1;
+                    cursor: default;
+                }
+            }
         }
 
         .selector {

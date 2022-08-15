@@ -1,14 +1,14 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext } from 'react';
 
 // Contexts
-import { Utils } from "./Utils";
-import { Data } from "./Data";
-import { Events } from "./Events";
+import { Data } from './Data';
+import { Events } from './Events';
+import { Utils } from './Utils';
 
-const API_VERSION = "api_v1";
-const API_URL = "https://bookly-server.herokuapp.com/"; // "http://localhost:3100/"
-const OPEN_LIB_API_URL = "https://openlibrary.org";
-const IMAGE_SIZE = "L"; // "M" "L"
+const API_VERSION = 'api_v1';
+const API_URL = 'http://localhost:3100/'; // "https://bookly-server.herokuapp.com/"; //
+const OPEN_LIB_API_URL = 'https://openlibrary.org';
+const IMAGE_SIZE = 'L'; // "M" "L"
 
 export const API = createContext();
 const APIProvider = (props) => {
@@ -21,9 +21,9 @@ const APIProvider = (props) => {
         authors,
         changeUserBookStatus,
         changeUserBookScore,
-        changeUserBookFinishDate,
+        updateBook,
         filterDuplicateAuthors,
-        filterDuplicateBooks,
+        filterDuplicateBooks
     } = useContext(Data);
     const { emit } = useContext(Events);
 
@@ -36,19 +36,19 @@ const APIProvider = (props) => {
 
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/user/register`, {
-                method: "post",
+                method: 'post',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
                 },
-                body: JSON.stringify(postData),
+                body: JSON.stringify(postData)
             });
 
             const response = await rawResponse.json();
 
             // Save new user
-            if ("error" in response) return response;
+            if ('error' in response) return response;
             return response;
         } catch (error) {
             console.log(error);
@@ -61,22 +61,22 @@ const APIProvider = (props) => {
 
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/user/login`, {
-                method: "post",
+                method: 'post',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
                 },
-                body: JSON.stringify(postData),
+                body: JSON.stringify(postData)
             });
 
             const response = await rawResponse.json();
 
             // Return with error if it is the case
-            if ("error" in response) return response;
+            if ('error' in response) return response;
 
             // Save token
-            if ("token" in response) {
+            if ('token' in response) {
                 token.current = response.token;
                 setInfo(`${APP_NAME}_token`, token.current);
 
@@ -87,26 +87,26 @@ const APIProvider = (props) => {
             return response;
         } catch (error) {
             console.log(error);
-            return { error: "Unknown login error" };
+            return { error: 'Unknown login error' };
         }
     };
 
     const testToken = async (token) => {
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/user/testToken`, {
-                method: "get",
+                method: 'get',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    token,
-                },
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token
+                }
             });
 
             const response = await rawResponse.json();
 
             // Return with error if it is the case
-            if ("error" in response) return response;
+            if ('error' in response) return response;
 
             return response;
         } catch (error) {
@@ -118,19 +118,19 @@ const APIProvider = (props) => {
     const getUserInfo = async () => {
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/user/getUserInfo`, {
-                method: "get",
+                method: 'get',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    token: token.current,
-                },
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token: token.current
+                }
             });
 
             const response = await rawResponse.json();
 
             // Save new user
-            if ("error" in response) {
+            if ('error' in response) {
                 logout();
                 return response;
             }
@@ -149,7 +149,7 @@ const APIProvider = (props) => {
         if (!tokenInCookie) return false;
 
         const response = await testToken(tokenInCookie);
-        if ("error" in response) return false;
+        if ('error' in response) return false;
 
         // Set token
         token.current = tokenInCookie;
@@ -157,7 +157,7 @@ const APIProvider = (props) => {
 
         // Save user info
         const userInfoResponse = await getUserInfo();
-        if ("error" in userInfoResponse) return false;
+        if ('error' in userInfoResponse) return false;
 
         return true;
     };
@@ -167,7 +167,7 @@ const APIProvider = (props) => {
         user.current = null;
 
         clearInfo(APP_NAME);
-        emit("onLogout");
+        emit('onLogout');
     };
 
     const tryToLogInWithToken = async () => {
@@ -178,7 +178,7 @@ const APIProvider = (props) => {
             token.current = tokenInCookie;
 
             const result = await getUserInfo();
-            if ("error" in result) {
+            if ('error' in result) {
                 logout();
                 return false;
             }
@@ -193,20 +193,20 @@ const APIProvider = (props) => {
 
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/user/changeEmail`, {
-                method: "post",
+                method: 'post',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    token: token.current,
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token: token.current
                 },
-                body: JSON.stringify(postData),
+                body: JSON.stringify(postData)
             });
 
             const response = await rawResponse.json();
 
             // Save new user
-            if ("error" in response) return response;
+            if ('error' in response) return response;
             user.current = response;
 
             return response;
@@ -221,20 +221,20 @@ const APIProvider = (props) => {
 
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/user/changePassword`, {
-                method: "post",
+                method: 'post',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    token: token.current,
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token: token.current
                 },
-                body: JSON.stringify(postData),
+                body: JSON.stringify(postData)
             });
 
             const response = await rawResponse.json();
 
             // Save new user
-            if ("error" in response) return response;
+            if ('error' in response) return response;
             user.current = response;
 
             return response;
@@ -249,20 +249,20 @@ const APIProvider = (props) => {
 
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/user/deleteAccount`, {
-                method: "post",
+                method: 'post',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    token: token.current,
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token: token.current
                 },
-                body: JSON.stringify(postData),
+                body: JSON.stringify(postData)
             });
 
             const response = await rawResponse.json();
 
             // Logout
-            if ("success" in response) logout();
+            if ('success' in response) logout();
 
             return response;
         } catch (error) {
@@ -284,24 +284,24 @@ const APIProvider = (props) => {
 
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/book/changeStatus`, {
-                method: "post",
+                method: 'post',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    token: token.current,
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token: token.current
                 },
-                body: JSON.stringify(postData),
+                body: JSON.stringify(postData)
             });
 
             const response = await rawResponse.json();
-            if ("error" in response) return false;
+            if ('error' in response) return false;
             else changeUserBookStatus(bookId, oldStatus, status, response);
 
             return response;
         } catch (error) {
             console.log(error);
-            return { error: "Unknown error" };
+            return { error: 'Unknown error' };
         }
     };
 
@@ -310,25 +310,25 @@ const APIProvider = (props) => {
 
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/book/changeScore`, {
-                method: "post",
+                method: 'post',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    token: token.current,
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token: token.current
                 },
-                body: JSON.stringify(postData),
+                body: JSON.stringify(postData)
             });
 
             const response = await rawResponse.json();
 
-            if ("error" in response) return false;
+            if ('error' in response) return false;
             else changeUserBookScore(bookId, response);
 
             return response;
         } catch (error) {
             console.log(error);
-            return { error: "Unknown error" };
+            return { error: 'Unknown error' };
         }
     };
 
@@ -337,38 +337,65 @@ const APIProvider = (props) => {
 
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/book/changeFinishDate`, {
-                method: "post",
+                method: 'post',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    token: token.current,
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token: token.current
                 },
-                body: JSON.stringify(postData),
+                body: JSON.stringify(postData)
             });
 
             const response = await rawResponse.json();
 
-            if ("error" in response) return false;
-            else changeUserBookFinishDate(bookId, response);
+            if ('error' in response) return false;
+            else updateBook(bookId, response);
 
             return response;
         } catch (error) {
             console.log(error);
-            return { error: "Unknown error" };
+            return { error: 'Unknown error' };
+        }
+    };
+
+    const setBookRereads = async (bookId, rereads) => {
+        const postData = { bookId, rereads };
+
+        try {
+            const rawResponse = await fetch(`${API_URL}${API_VERSION}/book/setRereads`, {
+                method: 'post',
+                headers: {
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token: token.current
+                },
+                body: JSON.stringify(postData)
+            });
+
+            const response = await rawResponse.json();
+
+            if ('error' in response) return false;
+            else updateBook(bookId, response);
+
+            return response;
+        } catch (error) {
+            console.log(error);
+            return { error: 'Unknown error' };
         }
     };
 
     const getAllUserBooks = async () => {
         try {
             const rawResponse = await fetch(`${API_URL}${API_VERSION}/book/getAll`, {
-                method: "get",
+                method: 'get',
                 headers: {
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    token: token.current,
-                },
+                    Accept: 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    token: token.current
+                }
             });
 
             const response = await rawResponse.json();
@@ -378,7 +405,7 @@ const APIProvider = (props) => {
             return response;
         } catch (error) {
             console.log(error);
-            return { error: "Unknown error" };
+            return { error: 'Unknown error' };
         }
     };
 
@@ -401,13 +428,13 @@ const APIProvider = (props) => {
                 description,
                 links,
                 title,
-                authors: bookAuthors.map(({ author }) => author.key.replace("/authors/", "")),
+                authors: bookAuthors.map(({ author }) => author.key.replace('/authors/', '')),
                 covers:
                     covers && covers.length
                         ? covers
                               .filter((coverKey) => coverKey !== -1)
                               .map((coverKey) => `https://covers.openlibrary.org/b/id/${coverKey}-${IMAGE_SIZE}.jpg`)
-                        : null,
+                        : null
             };
 
             if (parsedResponse.covers && parsedResponse.covers.length <= 0) parsedResponse.covers = null;
@@ -451,7 +478,7 @@ const APIProvider = (props) => {
                         ? photos
                               .filter((photoKey) => photoKey !== -1)
                               .map((photoKey) => `https://covers.openlibrary.org/b/id/${photoKey}-${IMAGE_SIZE}.jpg`)
-                        : null,
+                        : null
             };
 
             if (parsedResponse.photos && parsedResponse.photos.length <= 0) parsedResponse.photos = null;
@@ -468,7 +495,7 @@ const APIProvider = (props) => {
     };
 
     const getAuthorWorks = async (authorId) => {
-        if (authorId in authors.current && "works" in authors.current[authorId] && authors.current[authorId].works)
+        if (authorId in authors.current && 'works' in authors.current[authorId] && authors.current[authorId].works)
             return authors.current[authorId].works;
 
         try {
@@ -477,8 +504,8 @@ const APIProvider = (props) => {
             const response = await rawResponse.json();
 
             let parsedResponse = response.docs
-                .filter(({ type }) => type === "work")
-                .map(({ key }) => key.replace("/works/", ""));
+                .filter(({ type }) => type === 'work')
+                .map(({ key }) => key.replace('/works/', ''));
 
             parsedResponse = parsedResponse.slice(0, 30);
 
@@ -520,18 +547,18 @@ const APIProvider = (props) => {
             const rawResponse = await fetch(
                 `${OPEN_LIB_API_URL}/search.json?language=eng&limit=30&q=${bookQuery
                     .toLowerCase()
-                    .replaceAll(" ", "+")}`
+                    .replaceAll(' ', '+')}`
             );
 
             const response = await rawResponse.json();
 
             // Parse ids
             let parsedWorks = response.docs
-                .filter(({ type }) => type === "work")
-                .map(({ key }) => key.replace("/works/", ""));
+                .filter(({ type }) => type === 'work')
+                .map(({ key }) => key.replace('/works/', ''));
 
             let parsedAuthors = response.docs
-                .filter(({ type }) => type === "work")
+                .filter(({ type }) => type === 'work')
                 .map(({ author_key }) => author_key || [])
                 .flat();
             parsedAuthors = [...new Set(parsedAuthors)];
@@ -541,7 +568,7 @@ const APIProvider = (props) => {
             for (const result of response.docs) {
                 const { key, publish_date, id_amazon, id_goodreads, id_librarything, number_of_pages_median } = result;
 
-                const bookKey = key.replace("/works/", "");
+                const bookKey = key.replace('/works/', '');
 
                 if (parsedWorks.includes(bookKey))
                     extraWorksInfo[bookKey] = {
@@ -549,7 +576,7 @@ const APIProvider = (props) => {
                         amazonId: id_amazon && id_amazon.length > 0 ? id_amazon[0] : null,
                         goodreadsId: id_goodreads && id_goodreads.length > 0 ? id_goodreads[0] : null,
                         libraryThingId: id_librarything && id_librarything.length > 0 ? id_librarything[0] : null,
-                        numPages: number_of_pages_median || null,
+                        numPages: number_of_pages_median || null
                     };
             }
 
@@ -619,13 +646,14 @@ const APIProvider = (props) => {
                 changeBookStatus,
                 changeBookScore,
                 changeBookFinishDate,
+                setBookRereads,
                 getAllUserBooks,
 
                 // OPEN LIBRARY API
                 getBookInfo,
                 getAuthorInfo,
                 getAuthorWorks,
-                searchBooks,
+                searchBooks
             }}
         >
             {props.children}

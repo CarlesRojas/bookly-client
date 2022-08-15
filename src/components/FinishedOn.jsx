@@ -1,30 +1,41 @@
-import { useState, useCallback, useRef, useEffect, useContext } from "react";
-import SVG from "react-inlinesvg";
-import useClickOutsideRef from "../hooks/useClickOutsideRef";
-import cn from "classnames";
+import cn from 'classnames';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import SVG from 'react-inlinesvg';
+import useClickOutsideRef from '../hooks/useClickOutsideRef';
 
-import { API } from "../contexts/API";
+import { API } from '../contexts/API';
 
-import NextIcon from "../resources/icons/next.svg";
-import PrevIcon from "../resources/icons/prev.svg";
+import CloseIcon from '../resources/icons/close.svg';
+import NextIcon from '../resources/icons/next.svg';
+import PrevIcon from '../resources/icons/prev.svg';
 
 const MONTHS = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
 ];
-const MONTH_NAMES_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTH_NAMES_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-export default function FinishedOn({ bookId, monthFinished, yearFinished }) {
+export default function FinishedOn({
+    bookId,
+    monthFinished,
+    yearFinished,
+    type,
+    index,
+    onUpdateReread,
+    onDeleteReread,
+    lowerYear,
+    lowerMonth
+}) {
     const { changeBookFinishDate } = useContext(API);
 
     const today = new Date();
@@ -45,9 +56,7 @@ export default function FinishedOn({ bookId, monthFinished, yearFinished }) {
     const [expanded, setExpanded] = useState(false);
 
     const handleButtonClicked = () => {
-        if (expanded) return;
-
-        setExpanded(true);
+        setExpanded((prev) => !prev);
     };
 
     const handleSaveButtonClicked = () => {
@@ -55,7 +64,8 @@ export default function FinishedOn({ bookId, monthFinished, yearFinished }) {
 
         setExpanded(false);
 
-        changeBookFinishDate(bookId, month, year);
+        if (type === 'finish') changeBookFinishDate(bookId, month, year);
+        else onUpdateReread(index, month, year);
     };
 
     // #################################################
@@ -83,25 +93,31 @@ export default function FinishedOn({ bookId, monthFinished, yearFinished }) {
     // #################################################
 
     return (
-        <div className={cn("FinishedOn", "neoPopup", { expanded })} onClick={handleButtonClicked} ref={statusRef}>
-            <div className="main" onClick={handleClickOutside}>
-                <p className="label">finished on</p>
+        <div className={cn('FinishedOn', 'neoPopup', { expanded })} ref={statusRef}>
+            <div className="main">
+                <div className="mainContainer" onClick={handleButtonClicked}>
+                    <p className="label">{type === 'finish' ? 'finished on' : 'read again on'}</p>
 
-                <p className="date">{`${
-                    monthFinished >= 0 && monthFinished <= 11 ? MONTHS[monthFinished] : ""
-                } ${yearFinished}`}</p>
+                    <p className="date">{`${
+                        monthFinished >= 0 && monthFinished <= 11 ? MONTHS[monthFinished] : ''
+                    } ${yearFinished}`}</p>
+                </div>
+
+                {type === 'reread' && (
+                    <SVG className="removeIcon" src={CloseIcon} onClick={() => onDeleteReread(index)} />
+                )}
             </div>
 
-            <div className={cn("selector", { visible: expanded })}>
+            <div className={cn('selector', { visible: expanded })}>
                 <div className="yearSelector">
                     <SVG
-                        className={cn("icon", { disabled: year <= 1 })}
+                        className={cn('icon', { disabled: year <= 1 || year <= lowerYear })}
                         src={PrevIcon}
                         onClick={() => setYear((prev) => --prev)}
                     />
                     <p className="year">{year}</p>
                     <SVG
-                        className={cn("icon", { disabled: year >= currYear })}
+                        className={cn('icon', { disabled: year >= currYear })}
                         src={NextIcon}
                         onClick={() => setYear((prev) => ++prev)}
                     />
@@ -111,9 +127,12 @@ export default function FinishedOn({ bookId, monthFinished, yearFinished }) {
                     {MONTH_NAMES_SHORT.map((monthName, i) => (
                         <div
                             className={cn(
-                                "month",
+                                'month',
                                 { selected: month === i },
-                                { disabled: year === currYear && i > currMonth }
+                                {
+                                    disabled:
+                                        (year === currYear && i > currMonth) || (year === lowerYear && i < lowerMonth)
+                                }
                             )}
                             onClick={() => setMonth(i)}
                             key={monthName}
