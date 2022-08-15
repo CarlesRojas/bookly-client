@@ -6,7 +6,7 @@ import { Events } from './Events';
 import { Utils } from './Utils';
 
 const API_VERSION = 'api_v1';
-const API_URL = 'http://localhost:3100/'; // "https://bookly-server.herokuapp.com/"; //
+const API_URL = 'https://bookly-server.herokuapp.com/'; // 'http://localhost:3100/'; //
 const OPEN_LIB_API_URL = 'https://openlibrary.org';
 const IMAGE_SIZE = 'L'; // "M" "L"
 
